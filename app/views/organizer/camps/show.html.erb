@@ -1,0 +1,71 @@
+<% content_for(:title, "#{@camp.title} — Organizer") %>
+
+<div class="flex items-center justify-between mb-8">
+  <div>
+    <h1><%= @camp.title %></h1>
+    <div class="flex items-center gap-3 mt-2">
+      <%= render Beachcamp::LevelBadgeComponent.new(level: @camp.level) %>
+      <%= render Ui::BadgeComponent.new(color: camp_status_color(@camp)) { @camp.status.humanize } %>
+    </div>
+  </div>
+  <div class="flex gap-3">
+    <% if @camp.draft? %>
+      <%= link_to t("organizer.camps.show.publish"), publish_organizer_camp_path(@camp), data: { turbo_method: :patch, turbo_confirm: t("organizer.camps.show.publish_confirm") }, class: "ds-btn ds-btn--primary ds-btn--md" %>
+    <% end %>
+    <% unless @camp.cancelled? %>
+      <%= link_to t("organizer.camps.show.cancel_camp"), cancel_organizer_camp_path(@camp), data: { turbo_method: :patch, turbo_confirm: t("organizer.camps.show.cancel_confirm") }, class: "ds-btn ds-btn--danger ds-btn--md" %>
+    <% end %>
+    <%= link_to t("shared.edit"), edit_organizer_camp_path(@camp), class: "ds-btn ds-btn--outline ds-btn--md" %>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+  <% [
+    { label: t("organizer.camps.show.location"), value: "#{@camp.location}, #{@camp.country}" },
+    { label: t("organizer.camps.show.dates"), value: "#{@camp.start_date.strftime('%b %d')} – #{@camp.end_date.strftime('%b %d, %Y')}" },
+    { label: t("organizer.camps.show.price"), value: @camp.price_display },
+    { label: t("organizer.camps.show.spots"), value: "#{@camp.registrations.active.count}/#{@camp.max_participants}" }
+  ].each do |stat| %>
+    <%= render Ui::CardComponent.new(padding: "p-4") do %>
+      <div class="ds-stat-card__label"><%= stat[:label] %></div>
+      <div style="font-weight:var(--fw-bold); color:var(--neutral-900);"><%= stat[:value] %></div>
+    <% end %>
+  <% end %>
+</div>
+
+<%= render Ui::CardComponent.new(padding: "p-6") do %>
+  <h3 class="mb-4"><%= t("organizer.camps.show.description") %></h3>
+  <div style="color:var(--neutral-600);"><%= simple_format(@camp.description) %></div>
+<% end %>
+
+<div class="mt-8">
+  <div class="flex items-center justify-between mb-4">
+    <h3><%= t("organizer.camps.show.registrations") %></h3>
+    <%= link_to t("organizer.camps.show.view_all"), organizer_camp_registrations_path(@camp), class: "ds-btn ds-btn--ghost ds-btn--sm" %>
+  </div>
+  <%= render Ui::CardComponent.new(padding: "") do %>
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th><%= t("organizer.camps.show.col_player") %></th>
+          <th><%= t("organizer.camps.show.col_email") %></th>
+          <th><%= t("organizer.camps.show.col_status") %></th>
+          <th><%= t("organizer.camps.show.col_date") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @camp.registrations.includes(:user).order(created_at: :desc).limit(10).each do |reg| %>
+          <tr>
+            <td style="font-weight:var(--fw-semibold);"><%= reg.user.full_name %></td>
+            <td><%= reg.user.email %></td>
+            <td>
+              <% color = case reg.status; when "confirmed" then "success"; when "pending" then "warning"; else "danger"; end %>
+              <%= render Ui::BadgeComponent.new(color: color) { reg.status.humanize } %>
+            </td>
+            <td><%= reg.created_at.strftime("%b %d, %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

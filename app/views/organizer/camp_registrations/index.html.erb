@@ -1,0 +1,49 @@
+<% content_for(:title, "#{t('organizer.camp_registrations.index.heading')} — #{@camp.title}") %>
+
+<div class="mb-8">
+  <h1><%= t("organizer.camp_registrations.index.heading") %></h1>
+  <p class="text-muted"><%= @camp.title %> — <%= @registrations.count %> <%= t("shared.total") %></p>
+</div>
+
+<%= render Ui::CardComponent.new(padding: "") do %>
+  <table class="ds-table">
+    <thead>
+      <tr>
+        <th><%= t("organizer.camp_registrations.index.col_player") %></th>
+        <th><%= t("organizer.camp_registrations.index.col_email") %></th>
+        <th><%= t("organizer.camp_registrations.index.col_level") %></th>
+        <th><%= t("organizer.camp_registrations.index.col_status") %></th>
+        <th><%= t("organizer.camp_registrations.index.col_registered") %></th>
+        <th><%= t("organizer.camp_registrations.index.col_actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @registrations.each do |reg| %>
+        <tr>
+          <td style="font-weight:var(--fw-semibold);"><%= reg.user.full_name %></td>
+          <td><%= reg.user.email %></td>
+          <td><%= render Beachcamp::LevelBadgeComponent.new(level: reg.user.level) %></td>
+          <td>
+            <% color = case reg.status; when "confirmed" then "success"; when "pending" then "warning"; else "danger"; end %>
+            <%= render Ui::BadgeComponent.new(color: color) { reg.status.humanize } %>
+          </td>
+          <td><%= reg.created_at.strftime("%b %d, %Y") %></td>
+          <td>
+            <% unless reg.cancelled? %>
+              <%= form_with url: organizer_camp_registration_path(@camp, reg), method: :patch, local: true, style: "display:inline;" do |f| %>
+                <% if reg.pending? %>
+                  <%= f.hidden_field :status, value: "confirmed" %>
+                  <%= f.submit t("shared.confirm"), class: "ds-btn ds-btn--primary ds-btn--sm" %>
+                <% end %>
+              <% end %>
+              <%= form_with url: organizer_camp_registration_path(@camp, reg), method: :patch, local: true, style: "display:inline;" do |f| %>
+                <%= f.hidden_field :status, value: "cancelled" %>
+                <%= f.submit t("shared.cancel"), class: "ds-btn ds-btn--ghost ds-btn--sm", style: "color:var(--danger);" %>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

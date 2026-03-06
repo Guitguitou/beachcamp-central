@@ -1,0 +1,60 @@
+<% content_for(:title, "BeachCamp Design System") %>
+
+<section class="ds-hero py-20">
+  <div class="ds-hero__glow-orange"></div>
+  <div class="ds-hero__glow-teal"></div>
+  <div class="container" style="position:relative; text-align:center;">
+    <div style="display:inline-flex; align-items:center; gap:var(--space-2); background:rgba(255,255,255,0.1); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-full); padding:var(--space-2) var(--space-4); margin-bottom:var(--space-6);">
+      <span style="color:var(--sand-400);">✨</span>
+      <span style="font-size:var(--fs-sm); color:rgba(255,255,255,0.8); font-weight:var(--fw-medium);">Design System v1.0</span>
+    </div>
+    <h1 style="font-size:clamp(2.5rem,5vw,3.75rem); font-weight:var(--fw-extrabold); color:white; margin-bottom:var(--space-4); letter-spacing:var(--tracking-tight);">
+      BeachCamp<br>
+      <span class="gradient-text-sunset">Design System</span>
+    </h1>
+    <p style="font-size:var(--fs-body); color:rgba(255,255,255,0.5); max-width:40rem; margin:0 auto;">
+      Tokens, components, pages &amp; guidelines for the coolest beach volleyball platform on the planet.
+    </p>
+    <div style="display:flex; gap:var(--space-6); justify-content:center; margin-top:var(--space-10);">
+      <% [{ n: "3", l: "Color Palettes" }, { n: "12+", l: "Components" }, { n: "8", l: "Pages" }].each do |stat| %>
+        <div style="background:rgba(255,255,255,0.1); backdrop-filter:blur(8px); border-radius:var(--radius-xl); padding:var(--space-4) var(--space-6); border:1px solid rgba(255,255,255,0.1);">
+          <div style="font-size:var(--fs-h2); font-weight:var(--fw-extrabold); color:white;"><%= stat[:n] %></div>
+          <div style="font-size:var(--fs-xs); color:rgba(255,255,255,0.5);"><%= stat[:l] %></div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<div class="container py-16">
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Foundation</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <%= ds_page_card(title: "Design Tokens", description: "Colors, typography, spacing, shadows", badge: "Core", badge_color: "ocean", path: design_tokens_path, icon: "🎨") %>
+      <%= ds_page_card(title: "Style Guide", description: "Brand guidelines, do's and don'ts", badge: "Guidelines", badge_color: "sunset", path: style_guide_path, icon: "📄") %>
+    </div>
+  </section>
+
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Public Pages</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <%= ds_page_card(title: "Explore Camps", description: "Browse all camps with filters", badge: "Public", badge_color: "success", path: camps_path, icon: "📅") %>
+      <%= ds_page_card(title: "Login", description: "Auth with Devise", badge: "Auth", badge_color: "purple", path: new_user_session_path, icon: "🔐") %>
+      <%= ds_page_card(title: "Sign Up", description: "Registration flow", badge: "Auth", badge_color: "purple", path: new_user_registration_path, icon: "👤") %>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Components</h2>
+    <%= render Ui::CardComponent.new(padding: "p-6") do %>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <% %w[LevelBadge CampCard SpotsIndicator FilterBar Navbar Sidebar Button Card Badge Input].each do |name| %>
+          <div style="display:flex; align-items:center; gap:var(--space-2); padding:var(--space-3); border-radius:var(--radius-md);">
+            <div style="width:8px; height:8px; background:var(--gradient-sunset); border-radius:50%;"></div>
+            <span style="font-weight:var(--fw-medium); color:var(--neutral-900); font-size:var(--fs-sm);"><%= name %></span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+</div>

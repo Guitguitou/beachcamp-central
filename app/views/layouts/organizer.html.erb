@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <title><%= content_for(:title) || t("layouts.organizer.title") %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="/icon.png" type="image/png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body style="margin:0;">
+    <div class="layout-with-sidebar">
+      <%= render Layout::OrganizerSidebarComponent.new(current_path: request.path) %>
+      <div class="layout-with-sidebar__content">
+        <% if notice.present? %>
+          <div class="ds-flash ds-flash--notice"><%= notice %></div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="ds-flash ds-flash--alert"><%= alert %></div>
+        <% end %>
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>

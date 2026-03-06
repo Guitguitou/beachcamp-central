@@ -1,0 +1,66 @@
+<% content_for(:title, t("organizer.dashboard.show.title")) %>
+
+<div class="mb-8">
+  <h1><%= t("organizer.dashboard.show.heading") %></h1>
+  <p class="text-muted"><%= t("organizer.dashboard.show.welcome", name: current_user.first_name) %></p>
+</div>
+
+<%# Stats %>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+  <% [
+    { label: t("organizer.dashboard.show.stat_total_camps"), value: @total_camps, icon: "🏕" },
+    { label: t("organizer.dashboard.show.stat_published"), value: @published_camps, icon: "✅" },
+    { label: t("organizer.dashboard.show.stat_registrations"), value: @total_registrations, icon: "👥" },
+    { label: t("organizer.dashboard.show.stat_revenue"), value: "€#{@total_revenue / 100}", icon: "💰" }
+  ].each do |stat| %>
+    <%= render Ui::CardComponent.new(padding: "p-6") do %>
+      <div style="font-size:1.5rem; margin-bottom:var(--space-2);"><%= stat[:icon] %></div>
+      <div class="ds-stat-card__value"><%= stat[:value] %></div>
+      <div class="ds-stat-card__label"><%= stat[:label] %></div>
+    <% end %>
+  <% end %>
+</div>
+
+<%# Recent Camps %>
+<div class="flex items-center justify-between mb-6">
+  <h2 style="font-weight:var(--fw-extrabold);"><%= t("organizer.dashboard.show.your_camps") %></h2>
+  <%= render Ui::ButtonComponent.new(href: new_organizer_camp_path, size: "sm") { t("organizer.dashboard.show.create_camp") } %>
+</div>
+
+<% if @camps.any? %>
+  <%= render Ui::CardComponent.new(padding: "") do %>
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th><%= t("organizer.dashboard.show.col_camp") %></th>
+          <th><%= t("organizer.dashboard.show.col_dates") %></th>
+          <th><%= t("organizer.dashboard.show.col_level") %></th>
+          <th><%= t("organizer.dashboard.show.col_status") %></th>
+          <th><%= t("organizer.dashboard.show.col_registrations") %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @camps.each do |camp| %>
+          <tr>
+            <td style="font-weight:var(--fw-semibold);"><%= link_to camp.title, organizer_camp_path(camp), style: "color:var(--neutral-900);" %></td>
+            <td><%= camp.start_date.strftime("%b %d") %> – <%= camp.end_date.strftime("%b %d") %></td>
+            <td><%= render Beachcamp::LevelBadgeComponent.new(level: camp.level) %></td>
+            <td><%= render Ui::BadgeComponent.new(color: camp_status_color(camp)) { camp.status.humanize } %></td>
+            <td><%= camp.registrations.active.count %>/<%= camp.max_participants %></td>
+            <td>
+              <%= link_to t("shared.view"), organizer_camp_path(camp), class: "ds-btn ds-btn--ghost ds-btn--sm" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% else %>
+  <div class="ds-empty">
+    <div class="ds-empty__icon"><%= t("organizer.dashboard.show.empty_icon") %></div>
+    <div class="ds-empty__title"><%= t("organizer.dashboard.show.empty_title") %></div>
+    <p class="ds-empty__text"><%= t("organizer.dashboard.show.empty_text") %></p>
+    <%= render Ui::ButtonComponent.new(href: new_organizer_camp_path) { t("organizer.dashboard.show.create_camp") } %>
+  </div>
+<% end %>

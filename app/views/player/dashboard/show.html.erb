@@ -1,0 +1,42 @@
+<% content_for(:title, t("player.dashboard.show.title")) %>
+
+<%= render Layout::PublicNavbarComponent.new(current_user: current_user) %>
+
+<main class="container py-12">
+  <div class="mb-8">
+    <h1><%= t("player.dashboard.show.greeting", name: current_user.first_name) %></h1>
+    <p class="text-muted"><%= t("player.dashboard.show.subtitle") %></p>
+  </div>
+
+  <%# Upcoming registrations %>
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6"><%= t("player.dashboard.show.upcoming_title") %></h2>
+    <% if @upcoming.any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @upcoming.each do |reg| %>
+          <%= render Beachcamp::CampCardComponent.new(camp: reg.camp) %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="ds-empty">
+        <div class="ds-empty__icon"><%= t("player.dashboard.show.empty_icon") %></div>
+        <div class="ds-empty__title"><%= t("player.dashboard.show.empty_title") %></div>
+        <p class="ds-empty__text"><%= t("player.dashboard.show.empty_text") %></p>
+        <%= render Ui::ButtonComponent.new(href: camps_path) { t("player.dashboard.show.explore") } %>
+      </div>
+    <% end %>
+  </section>
+
+  <%# Suggested camps %>
+  <% if @suggested.any? %>
+    <section>
+      <h2 style="font-weight:var(--fw-extrabold);" class="mb-6"><%= t("player.dashboard.show.suggested_title") %></h2>
+      <p class="text-muted mb-6"><%= t("player.dashboard.show.suggested_subtitle", level: current_user.level.humanize) %></p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @suggested.each do |camp| %>
+          <%= render Beachcamp::CampCardComponent.new(camp: camp) %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</main>

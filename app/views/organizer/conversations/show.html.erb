@@ -1,0 +1,32 @@
+<% content_for(:title, "#{@conversation.camp.title} — #{t('organizer.conversations.index.heading')}") %>
+
+<div class="mb-6">
+  <h1><%= @conversation.camp.title %></h1>
+  <p class="text-muted"><%= t("organizer.conversations.show.conversation") %></p>
+</div>
+
+<%= render Ui::CardComponent.new(padding: "p-6") do %>
+  <div style="max-height:500px; overflow-y:auto; margin-bottom:var(--space-6);">
+    <% @messages.each do |msg| %>
+      <div style="display:flex; gap:var(--space-3); margin-bottom:var(--space-4);">
+        <div style="width:2rem; height:2rem; border-radius:50%; background:var(--gradient-sunset); display:flex; align-items:center; justify-content:center; color:white; font-size:var(--fs-xs); font-weight:var(--fw-bold); flex-shrink:0;">
+          <%= msg.user.first_name[0] %>
+        </div>
+        <div>
+          <div style="font-size:var(--fs-sm);">
+            <span style="font-weight:var(--fw-semibold);"><%= msg.user.full_name %></span>
+            <span style="color:var(--neutral-400); margin-left:var(--space-2); font-size:var(--fs-xs);"><%= msg.created_at.strftime("%b %d, %H:%M") %></span>
+          </div>
+          <p style="font-size:var(--fs-sm); color:var(--neutral-700); margin-top:var(--space-1);"><%= msg.body %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= form_with model: [@conversation, @message], url: organizer_conversation_messages_path(@conversation), local: true do |f| %>
+    <div class="flex gap-3">
+      <%= f.text_area :body, class: "form-input", placeholder: t("organizer.conversations.show.placeholder"), rows: 2, style: "flex:1;" %>
+      <%= render Ui::ButtonComponent.new(tag: :button) { t("shared.send") } %>
+    </div>
+  <% end %>
+<% end %>

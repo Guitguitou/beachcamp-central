@@ -1,0 +1,95 @@
+<% content_for(:title, t("organizer.camps.new.title")) %>
+
+<h1 class="mb-2"><%= t("organizer.camps.new.heading") %></h1>
+<p class="text-muted mb-8"><%= t("organizer.camps.new.subtitle") %></p>
+
+<div data-controller="stepper" data-stepper-current-value="1" data-stepper-total-value="4">
+  <%# Stepper indicator %>
+  <div class="ds-stepper">
+    <% [t("organizer.camps.new.step_basics"), t("organizer.camps.new.step_level"), t("organizer.camps.new.step_price"), t("organizer.camps.new.step_review")].each_with_index do |label, i| %>
+      <div class="ds-stepper__step" data-stepper-target="indicator" data-step="<%= i + 1 %>" data-action="click->stepper#goTo" style="cursor:pointer;">
+        <div class="ds-stepper__circle"><%= i + 1 %></div>
+        <span class="ds-stepper__label hidden-mobile"><%= label %></span>
+      </div>
+      <% unless i == 3 %>
+        <div class="ds-stepper__line"></div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= form_with model: [:organizer, @camp], local: true do |f| %>
+    <%# Step 1: Basics %>
+    <div data-stepper-target="step">
+      <%= render Ui::CardComponent.new(padding: "p-8") do %>
+        <h3 class="mb-6"><%= t("organizer.camps.new.basics_heading") %></h3>
+        <%= render Ui::InputComponent.new(name: :title, label: t("organizer.camps.new.field_title"), form: f, required: true, placeholder: t("organizer.camps.new.field_title_placeholder")) %>
+        <%= render Ui::InputComponent.new(name: :description, label: t("organizer.camps.new.field_description"), type: "textarea", form: f, placeholder: t("organizer.camps.new.field_description_placeholder")) %>
+        <%= render Ui::InputComponent.new(name: :location, label: t("organizer.camps.new.field_location"), form: f, required: true, placeholder: t("organizer.camps.new.field_location_placeholder")) %>
+        <%= render Ui::InputComponent.new(name: :country, label: t("organizer.camps.new.field_country"), form: f, required: true, placeholder: t("organizer.camps.new.field_country_placeholder")) %>
+        <div class="grid grid-cols-2 gap-4">
+          <%= render Ui::InputComponent.new(name: :start_date, label: t("organizer.camps.new.field_start_date"), type: "date", form: f, required: true) %>
+          <%= render Ui::InputComponent.new(name: :end_date, label: t("organizer.camps.new.field_end_date"), type: "date", form: f, required: true) %>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:var(--space-6);">
+          <button type="button" class="ds-btn ds-btn--primary ds-btn--md" data-action="stepper#next"><%= t("shared.next") %> →</button>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Step 2: Level & Capacity %>
+    <div data-stepper-target="step">
+      <%= render Ui::CardComponent.new(padding: "p-8") do %>
+        <h3 class="mb-6"><%= t("organizer.camps.new.level_heading") %></h3>
+        <div class="form-group">
+          <label class="form-label"><%= t("organizer.camps.new.field_level") %></label>
+          <%= f.select :level, Camp.levels.keys.map { |l| [l.humanize, l] }, {}, class: "form-input" %>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <%= render Ui::InputComponent.new(name: :min_participants, label: t("organizer.camps.new.field_min_participants"), type: "number", form: f, input_html: { min: 1, value: 4 }) %>
+          <%= render Ui::InputComponent.new(name: :max_participants, label: t("organizer.camps.new.field_max_participants"), type: "number", form: f, input_html: { min: 1, value: 16 }) %>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:var(--space-6);">
+          <button type="button" class="ds-btn ds-btn--outline ds-btn--md" data-action="stepper#prev">← <%= t("shared.back") %></button>
+          <button type="button" class="ds-btn ds-btn--primary ds-btn--md" data-action="stepper#next"><%= t("shared.next") %> →</button>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Step 3: Price & Media %>
+    <div data-stepper-target="step">
+      <%= render Ui::CardComponent.new(padding: "p-8") do %>
+        <h3 class="mb-6"><%= t("organizer.camps.new.price_heading") %></h3>
+        <div class="grid grid-cols-2 gap-4">
+          <%= render Ui::InputComponent.new(name: :price_cents, label: t("organizer.camps.new.field_price"), type: "number", form: f, helper: t("organizer.camps.new.field_price_helper"), input_html: { min: 0 }) %>
+          <div class="form-group">
+            <label class="form-label"><%= t("organizer.camps.new.field_currency") %></label>
+            <%= f.select :currency, [["EUR (€)", "EUR"], ["USD ($)", "USD"], ["GBP (£)", "GBP"]], {}, class: "form-input" %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><%= t("organizer.camps.new.field_poster") %></label>
+          <%= f.file_field :poster, class: "form-input", accept: "image/*" %>
+          <p class="form-helper"><%= t("organizer.camps.new.field_poster_helper") %></p>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:var(--space-6);">
+          <button type="button" class="ds-btn ds-btn--outline ds-btn--md" data-action="stepper#prev">← <%= t("shared.back") %></button>
+          <button type="button" class="ds-btn ds-btn--primary ds-btn--md" data-action="stepper#next"><%= t("shared.next") %> →</button>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Step 4: Review %>
+    <div data-stepper-target="step">
+      <%= render Ui::CardComponent.new(padding: "p-8") do %>
+        <h3 class="mb-6"><%= t("organizer.camps.new.review_heading") %></h3>
+        <p style="color:var(--neutral-600); margin-bottom:var(--space-6);">
+          <%= t("organizer.camps.new.review_text").html_safe %>
+        </p>
+        <div style="display:flex; justify-content:space-between; margin-top:var(--space-6);">
+          <button type="button" class="ds-btn ds-btn--outline ds-btn--md" data-action="stepper#prev">← <%= t("shared.back") %></button>
+          <%= f.submit t("organizer.camps.new.submit"), class: "ds-btn ds-btn--primary ds-btn--lg" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,54 @@
+<% content_for(:title, t("player.registrations.index.title")) %>
+
+<%= render Layout::PublicNavbarComponent.new(current_user: current_user) %>
+
+<main class="container py-12">
+  <h1 class="mb-8"><%= t("player.registrations.index.heading") %></h1>
+
+  <% if @registrations.any? %>
+    <%= render Ui::CardComponent.new(padding: "") do %>
+      <table class="ds-table">
+        <thead>
+          <tr>
+            <th><%= t("player.registrations.index.col_camp") %></th>
+            <th><%= t("player.registrations.index.col_dates") %></th>
+            <th><%= t("player.registrations.index.col_level") %></th>
+            <th><%= t("player.registrations.index.col_status") %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @registrations.each do |reg| %>
+            <tr>
+              <td>
+                <%= link_to reg.camp.title, camp_path(reg.camp), style: "font-weight:var(--fw-semibold); color:var(--neutral-900);" %>
+                <div style="font-size:var(--fs-xs); color:var(--neutral-500);"><%= reg.camp.location %>, <%= reg.camp.country %></div>
+              </td>
+              <td><%= reg.camp.start_date.strftime("%b %d") %> – <%= reg.camp.end_date.strftime("%b %d") %></td>
+              <td><%= render Beachcamp::LevelBadgeComponent.new(level: reg.camp.level) %></td>
+              <td>
+                <% color = case reg.status; when "confirmed" then "success"; when "pending" then "warning"; else "danger"; end %>
+                <%= render Ui::BadgeComponent.new(color: color) { reg.status.humanize } %>
+              </td>
+              <td>
+                <% unless reg.cancelled? %>
+                  <%= link_to t("shared.cancel"), player_registration_path(reg),
+                      data: { turbo_method: :delete, turbo_confirm: t("player.registrations.index.cancel_confirm") },
+                      class: "ds-btn ds-btn--ghost ds-btn--sm",
+                      style: "color:var(--danger);" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  <% else %>
+    <div class="ds-empty">
+      <div class="ds-empty__icon"><%= t("player.registrations.index.empty_icon") %></div>
+      <div class="ds-empty__title"><%= t("player.registrations.index.empty_title") %></div>
+      <p class="ds-empty__text"><%= t("player.registrations.index.empty_text") %></p>
+      <%= render Ui::ButtonComponent.new(href: camps_path) { t("player.registrations.index.explore") } %>
+    </div>
+  <% end %>
+</main>

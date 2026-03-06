@@ -1,0 +1,64 @@
+<% content_for(:title, t("camps.index.title")) %>
+
+<main>
+  <%# Hero with photo background %>
+  <section class="ds-hero--photo" style="background-image: url('<%= image_path("Volley-ball bleu jaune blanc sur la plage.jpg") %>');">
+    <%= render Layout::PublicNavbarComponent.new(current_user: current_user, transparent: true) %>
+
+    <div class="ds-hero__content container">
+      <h1 class="ds-hero__heading">
+        <%= t("camps.index.hero_title_prefix") %><br>
+        <span class="ds-hero__heading-highlight"><%= t("camps.index.hero_title_highlight") %></span>
+      </h1>
+      <p class="ds-hero__subtitle">
+        <%= t("camps.index.hero_subtitle") %>
+      </p>
+
+      <%= form_tag camps_path, method: :get, data: { turbo_action: "replace" } do %>
+        <div class="ds-hero__search-pill">
+          <input type="text" name="location" value="<%= params[:location] %>" placeholder="<%= t("camps.index.search_placeholder") %>">
+          <div class="ds-search-divider"></div>
+          <input type="text" name="country" value="<%= params[:country] %>" placeholder="<%= t("camps.index.search_date_placeholder") %>" onfocus="(this.type='date')" onblur="(this.type=this.value?'date':'text')">
+          <div class="ds-search-divider"></div>
+          <%= render Ui::ButtonComponent.new(tag: :button) { t("shared.search") } %>
+        </div>
+      <% end %>
+
+      <div class="ds-hero__stats">
+        <span>🌍 <%= t("camps.index.hero_stat_camps") %></span>
+        <span>🎯 <%= t("camps.index.hero_stat_levels") %></span>
+        <span>✅ <%= t("camps.index.hero_stat_organizers") %></span>
+      </div>
+    </div>
+  </section>
+
+  <div class="container py-12">
+    <%# Filter chips %>
+    <%= render Beachcamp::FilterBarComponent.new(
+      current_params: params.permit(:location, :country, :level, :available, :featured, :date_from, :date_to).to_h,
+      filters: [
+        { label: t("camps.index.filter_available"), param: :available, value: "1" },
+        { label: t("camps.index.filter_featured"), param: :featured, value: "1" },
+        { label: t("camps.index.filter_beginner"), param: :level, value: "beginner" },
+        { label: t("camps.index.filter_intermediate"), param: :level, value: "intermediate" },
+        { label: t("camps.index.filter_advanced"), param: :level, value: "advanced" },
+        { label: t("camps.index.filter_pro"), param: :level, value: "pro" },
+        { label: t("camps.index.filter_international"), param: :level, value: "international" }
+      ]
+    ) %>
+
+    <% if @camps.any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @camps.each do |camp| %>
+          <%= render Beachcamp::CampCardComponent.new(camp: camp) %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="ds-empty">
+        <div class="ds-empty__icon"><%= t("camps.index.empty_icon") %></div>
+        <div class="ds-empty__title"><%= t("camps.index.empty_title") %></div>
+        <p class="ds-empty__text"><%= t("camps.index.empty_text") %></p>
+      </div>
+    <% end %>
+  </div>
+</main>

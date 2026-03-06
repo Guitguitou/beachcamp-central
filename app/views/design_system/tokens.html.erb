@@ -1,0 +1,165 @@
+<% content_for(:title, "Design Tokens — BeachCamp") %>
+
+<div class="container py-12">
+  <div class="mb-12">
+    <h1>Design Tokens</h1>
+    <p class="text-muted" style="font-size:var(--fs-body);">The building blocks of BeachCamp's visual language</p>
+  </div>
+
+  <%# Colors %>
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Color Palette</h2>
+
+    <%= ds_palette_section(
+      name: "Ocean",
+      desc: "Primary — trust, depth, water vibes",
+      colors: [
+        { n: "50", c: "#ECFEFF" }, { n: "100", c: "#CFFAFE" }, { n: "200", c: "#A5F3FC" }, { n: "300", c: "#67E8F9" }, { n: "400", c: "#22D3EE" },
+        { n: "500", c: "#06B6D4" }, { n: "600", c: "#0891B2" }, { n: "700", c: "#0E7490" }, { n: "800", c: "#155E75" }, { n: "900", c: "#164E63" }
+      ]
+    ) %>
+
+    <%= ds_palette_section(
+      name: "Sunset",
+      desc: "Secondary — energy, passion, action",
+      colors: [
+        { n: "50", c: "#FFF7ED" }, { n: "100", c: "#FFEDD5" }, { n: "200", c: "#FED7AA" }, { n: "300", c: "#FDBA74" }, { n: "400", c: "#FB923C" },
+        { n: "500", c: "#F97316" }, { n: "600", c: "#EA580C" }, { n: "700", c: "#C2410C" }, { n: "800", c: "#9A3412" }, { n: "900", c: "#7C2D12" }
+      ]
+    ) %>
+
+    <%= ds_palette_section(
+      name: "Sand",
+      desc: "Accent — warmth, highlights, golden hour",
+      colors: [
+        { n: "50", c: "#FEFCE8" }, { n: "100", c: "#FEF9C3" }, { n: "200", c: "#FEF08A" }, { n: "300", c: "#FDE047" }, { n: "400", c: "#FACC15" },
+        { n: "500", c: "#EAB308" }, { n: "600", c: "#CA8A04" }, { n: "700", c: "#A16207" }, { n: "800", c: "#854D0E" }, { n: "900", c: "#713F12" }
+      ]
+    ) %>
+
+    <%= ds_palette_section(
+      name: "Neutrals",
+      desc: "Warm-tinted grays for text & backgrounds",
+      colors: [
+        { n: "0", c: "#FFFFFF" }, { n: "50", c: "#FAFAF8" }, { n: "100", c: "#F5F3F0" }, { n: "200", c: "#E8E5E0" }, { n: "300", c: "#D4D0C8" },
+        { n: "400", c: "#A8A29E" }, { n: "500", c: "#78716C" }, { n: "600", c: "#57534E" }, { n: "700", c: "#44403C" }, { n: "800", c: "#292524" }, { n: "900", c: "#1C1917" }
+      ]
+    ) %>
+
+    <div class="mt-8">
+      <h3 style="font-weight:var(--fw-bold); margin-bottom:var(--space-4);">States</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <% [{ name: "Success", color: "#10B981" }, { name: "Warning", color: "#F59E0B" }, { name: "Danger", color: "#EF4444" }, { name: "Info", color: "#06B6D4" }].each do |s| %>
+          <%= render Ui::CardComponent.new(padding: "p-4") do %>
+            <div style="height:3.5rem; border-radius:var(--radius-md); margin-bottom:var(--space-3); background-color:<%= s[:color] %>;"></div>
+            <div style="font-weight:var(--fw-bold); color:var(--neutral-900);"><%= s[:name] %></div>
+            <div style="font-size:var(--fs-xs); color:var(--neutral-400); font-family:var(--font-mono);"><%= s[:color] %></div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <%# Typography %>
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Typography</h2>
+    <%= render Ui::CardComponent.new(padding: "p-8") do %>
+      <div style="display:flex; flex-direction:column; gap:var(--space-8);">
+        <div>
+          <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400); margin-bottom:var(--space-2);">H1 — 40px Extrabold</div>
+          <h1>The quick brown fox</h1>
+        </div>
+        <div>
+          <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400); margin-bottom:var(--space-2);">H2 — 32px Bold</div>
+          <h2>The quick brown fox</h2>
+        </div>
+        <div>
+          <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400); margin-bottom:var(--space-2);">H3 — 24px Semibold</div>
+          <h3>The quick brown fox</h3>
+        </div>
+        <div>
+          <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400); margin-bottom:var(--space-2);">Body — 16px Regular</div>
+          <p>The quick brown fox jumps over the lazy dog. Regular body text for content.</p>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <%# Level Badges %>
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Level Badges</h2>
+    <%= render Ui::CardComponent.new(padding: "p-8") do %>
+      <div class="flex flex-wrap gap-3">
+        <% %w[beginner intermediate advanced pro international].each do |level| %>
+          <%= render Beachcamp::LevelBadgeComponent.new(level: level) %>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+
+  <%# Buttons %>
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Buttons</h2>
+    <%= render Ui::CardComponent.new(padding: "p-8") do %>
+      <div style="display:flex; flex-direction:column; gap:var(--space-6);">
+        <div>
+          <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400); margin-bottom:var(--space-3);">Primary</div>
+          <div class="flex flex-wrap gap-3">
+            <%= render Ui::ButtonComponent.new(size: "sm") { "Small" } %>
+            <%= render Ui::ButtonComponent.new { "Default" } %>
+            <%= render Ui::ButtonComponent.new(size: "lg") { "Large" } %>
+            <%= render Ui::ButtonComponent.new(disabled: true) { "Disabled" } %>
+          </div>
+        </div>
+        <div>
+          <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400); margin-bottom:var(--space-3);">Outline</div>
+          <div class="flex flex-wrap gap-3">
+            <%= render Ui::ButtonComponent.new(variant: "outline", size: "sm") { "Small" } %>
+            <%= render Ui::ButtonComponent.new(variant: "outline") { "Default" } %>
+            <%= render Ui::ButtonComponent.new(variant: "outline", size: "lg") { "Large" } %>
+          </div>
+        </div>
+        <div>
+          <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400); margin-bottom:var(--space-3);">Ghost</div>
+          <div class="flex flex-wrap gap-3">
+            <%= render Ui::ButtonComponent.new(variant: "ghost", size: "sm") { "Small" } %>
+            <%= render Ui::ButtonComponent.new(variant: "ghost") { "Default" } %>
+            <%= render Ui::ButtonComponent.new(variant: "ghost", size: "lg") { "Large" } %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <%# Radius & Shadows %>
+  <section class="mb-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Border Radius</h2>
+        <%= render Ui::CardComponent.new(padding: "p-8") do %>
+          <div class="grid grid-cols-2 gap-4">
+            <% [{ n: "sm", v: "8px" }, { n: "md", v: "12px" }, { n: "lg", v: "16px" }, { n: "xl", v: "24px" }].each do |r| %>
+              <div>
+                <div style="height:5rem; background:var(--gradient-sunset); margin-bottom:var(--space-2); border-radius:<%= r[:v] %>;"></div>
+                <div style="font-weight:var(--fw-bold); font-size:var(--fs-sm); color:var(--neutral-900);">radius-<%= r[:n] %></div>
+                <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400);"><%= r[:v] %></div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <div>
+        <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Shadows</h2>
+        <%= render Ui::CardComponent.new(padding: "p-8") do %>
+          <div style="display:flex; flex-direction:column; gap:var(--space-4);">
+            <% %w[xs sm md lg xl].each do |s| %>
+              <div style="padding:var(--space-4); background:var(--neutral-0); border-radius:var(--radius-md); box-shadow:var(--shadow-<%= s %>); border:1px solid rgba(232,229,224,0.5);">
+                <span style="font-weight:var(--fw-bold); font-size:var(--fs-sm); color:var(--neutral-900);">shadow-<%= s %></span>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+</div>

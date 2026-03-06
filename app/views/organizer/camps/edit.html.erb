@@ -1,0 +1,44 @@
+<% content_for(:title, "#{t('organizer.camps.edit.title')} — #{@camp.title}") %>
+
+<h1 class="mb-2"><%= t("organizer.camps.edit.heading") %></h1>
+<p class="text-muted mb-8"><%= @camp.title %></p>
+
+<%= form_with model: [:organizer, @camp], local: true do |f| %>
+  <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+    <h3 class="mb-6"><%= t("organizer.camps.edit.details_heading") %></h3>
+    <%= render Ui::InputComponent.new(name: :title, label: t("organizer.camps.new.field_title"), form: f, required: true) %>
+    <%= render Ui::InputComponent.new(name: :description, label: t("organizer.camps.new.field_description"), type: "textarea", form: f) %>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :location, label: t("organizer.camps.new.field_location"), form: f, required: true) %>
+      <%= render Ui::InputComponent.new(name: :country, label: t("organizer.camps.new.field_country"), form: f, required: true) %>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :start_date, label: t("organizer.camps.new.field_start_date"), type: "date", form: f, required: true) %>
+      <%= render Ui::InputComponent.new(name: :end_date, label: t("organizer.camps.new.field_end_date"), type: "date", form: f, required: true) %>
+    </div>
+    <div class="form-group">
+      <label class="form-label"><%= t("organizer.camps.new.field_level") %></label>
+      <%= f.select :level, Camp.levels.keys.map { |l| [l.humanize, l] }, {}, class: "form-input" %>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :min_participants, label: t("organizer.camps.new.field_min_participants"), type: "number", form: f) %>
+      <%= render Ui::InputComponent.new(name: :max_participants, label: t("organizer.camps.new.field_max_participants"), type: "number", form: f) %>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :price_cents, label: t("organizer.camps.new.field_price"), type: "number", form: f) %>
+      <div class="form-group">
+        <label class="form-label"><%= t("organizer.camps.new.field_currency") %></label>
+        <%= f.select :currency, [["EUR (€)", "EUR"], ["USD ($)", "USD"], ["GBP (£)", "GBP"]], {}, class: "form-input" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label"><%= t("organizer.camps.new.field_poster") %></label>
+      <%= f.file_field :poster, class: "form-input", accept: "image/*" %>
+    </div>
+  <% end %>
+
+  <div class="flex gap-3">
+    <%= f.submit t("organizer.camps.edit.save"), class: "ds-btn ds-btn--primary ds-btn--md" %>
+    <%= link_to t("shared.cancel"), organizer_camp_path(@camp), class: "ds-btn ds-btn--outline ds-btn--md" %>
+  </div>
+<% end %>

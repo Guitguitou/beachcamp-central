@@ -1,0 +1,32 @@
+<% content_for(:title, t("organizer.conversations.index.title")) %>
+
+<h1 class="mb-8"><%= t("organizer.conversations.index.heading") %></h1>
+
+<% if @conversations.any? %>
+  <div style="display:flex; flex-direction:column; gap:var(--space-3);">
+    <% @conversations.each do |convo| %>
+      <%= render Ui::CardComponent.new(hoverable: true, padding: "p-5") do %>
+        <a href="<%= organizer_conversation_path(convo) %>" style="text-decoration:none; color:inherit; display:block;">
+          <div class="flex items-center justify-between">
+            <div>
+              <div style="font-weight:var(--fw-bold);"><%= convo.camp.title %></div>
+              <div style="font-size:var(--fs-sm); color:var(--neutral-500);">
+                <%= t("organizer.conversations.index.message_count", count: convo.messages.count) %>
+                <% if convo.messages.any? %>
+                  · <%= t("organizer.conversations.index.last") %> <%= convo.messages.last.created_at.strftime("%b %d, %H:%M") %>
+                <% end %>
+              </div>
+            </div>
+            <span style="color:var(--sunset-500);">→</span>
+          </div>
+        </a>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="ds-empty">
+    <div class="ds-empty__icon"><%= t("organizer.conversations.index.empty_icon") %></div>
+    <div class="ds-empty__title"><%= t("organizer.conversations.index.empty_title") %></div>
+    <p class="ds-empty__text"><%= t("organizer.conversations.index.empty_text") %></p>
+  </div>
+<% end %>

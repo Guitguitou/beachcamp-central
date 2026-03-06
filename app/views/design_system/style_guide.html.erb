@@ -1,0 +1,163 @@
+<% content_for(:title, "Style Guide — BeachCamp") %>
+
+<div class="container py-12">
+  <div class="mb-12">
+    <h1>Style Guide</h1>
+    <p class="text-muted" style="font-size:var(--fs-body);">Rules to keep BeachCamp looking cool, consistent, and trustworthy</p>
+  </div>
+
+  <%# Brand Colors %>
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Brand Colors</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <%# DO %>
+      <%= render Ui::CardComponent.new(padding: "p-6", extra_class: "ds-do-card") do %>
+        <div class="flex items-center gap-2 mb-4">
+          <div style="width:1.75rem; height:1.75rem; background:var(--success); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:var(--fs-sm);">✓</div>
+          <span style="font-weight:var(--fw-bold); color:var(--success);">DO</span>
+        </div>
+        <p class="text-body mb-4">Use warm sunset oranges as primary CTA color, ocean teal as secondary. The combo says "beach + trust".</p>
+        <div class="flex gap-2">
+          <div style="width:3.5rem; height:3.5rem; background:var(--gradient-sunset); border-radius:var(--radius-md);"></div>
+          <div style="width:3.5rem; height:3.5rem; background:var(--gradient-ocean); border-radius:var(--radius-md);"></div>
+          <div style="width:3.5rem; height:3.5rem; background:var(--neutral-50); border-radius:var(--radius-md); border:1px solid var(--neutral-200);"></div>
+        </div>
+      <% end %>
+
+      <%# DON'T %>
+      <%= render Ui::CardComponent.new(padding: "p-6", extra_class: "ds-dont-card") do %>
+        <div class="flex items-center gap-2 mb-4">
+          <div style="width:1.75rem; height:1.75rem; background:var(--danger); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:var(--fs-sm);">✕</div>
+          <span style="font-weight:var(--fw-bold); color:var(--danger);">DON'T</span>
+        </div>
+        <p class="text-body mb-4">No neon, no rainbow gradients, no party aesthetics. We're premium accessible, not a rave.</p>
+        <div class="flex gap-2">
+          <div style="width:3.5rem; height:3.5rem; background:#FF00FF; border-radius:var(--radius-md);"></div>
+          <div style="width:3.5rem; height:3.5rem; background:#00FF00; border-radius:var(--radius-md);"></div>
+          <div style="width:3.5rem; height:3.5rem; background:linear-gradient(90deg,#EF4444,#EAB308,#10B981); border-radius:var(--radius-md);"></div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <%# Typography %>
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Typography</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <%= render Ui::CardComponent.new(padding: "p-6", extra_class: "ds-do-card") do %>
+        <div class="flex items-center gap-2 mb-4">
+          <div style="width:1.75rem; height:1.75rem; background:var(--success); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:var(--fs-sm);">✓</div>
+          <span style="font-weight:var(--fw-bold); color:var(--success);">DO</span>
+        </div>
+        <p class="text-body mb-4">Bold headings, clear hierarchy, generous spacing. Extrabold for impact, medium for body.</p>
+        <div style="margin-top:var(--space-4);">
+          <h2 style="font-size:var(--fs-h2); font-weight:var(--fw-extrabold); margin-bottom:var(--space-2);">Camp Title Here</h2>
+          <p class="text-muted" style="margin-bottom:var(--space-3);">Clean body text with great contrast</p>
+          <%= render Ui::ButtonComponent.new(size: "sm") { "Join Camp" } %>
+        </div>
+      <% end %>
+
+      <%= render Ui::CardComponent.new(padding: "p-6", extra_class: "ds-dont-card") do %>
+        <div class="flex items-center gap-2 mb-4">
+          <div style="width:1.75rem; height:1.75rem; background:var(--danger); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:var(--fs-sm);">✕</div>
+          <span style="font-weight:var(--fw-bold); color:var(--danger);">DON'T</span>
+        </div>
+        <p class="text-body mb-4">No all-caps paragraphs, no tiny CTA buttons, no low-contrast text.</p>
+        <div style="margin-top:var(--space-4);">
+          <h2 style="font-size:var(--fs-xs); text-transform:uppercase; letter-spacing:0.1em;">CAMP TITLE IN ALL CAPS</h2>
+          <p style="color:var(--neutral-300); font-size:var(--fs-xs);">Barely visible text</p>
+          <%= render Ui::ButtonComponent.new(variant: "ghost", size: "sm") { "tiny cta" } %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <%# Photography %>
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Photography</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <%= render Ui::CardComponent.new(padding: "p-6", extra_class: "ds-do-card") do %>
+        <div class="flex items-center gap-2 mb-4">
+          <div style="width:1.75rem; height:1.75rem; background:var(--success); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:var(--fs-sm);">✓</div>
+          <span style="font-weight:var(--fw-bold); color:var(--success);">DO</span>
+        </div>
+        <p class="text-body mb-4">Authentic beach volleyball: action shots, golden hour, real training moments. Natural and energetic.</p>
+        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:var(--space-2);">
+          <% ["High-quality action shots", "Natural beach settings", "Authentic training", "Golden hour vibes"].each do |item| %>
+            <li style="display:flex; align-items:center; gap:var(--space-2); font-size:var(--fs-sm); color:var(--neutral-600);">
+              <span style="color:var(--success);">✓</span> <%= item %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <%= render Ui::CardComponent.new(padding: "p-6", extra_class: "ds-dont-card") do %>
+        <div class="flex items-center gap-2 mb-4">
+          <div style="width:1.75rem; height:1.75rem; background:var(--danger); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:var(--fs-sm);">✕</div>
+          <span style="font-weight:var(--fw-bold); color:var(--danger);">DON'T</span>
+        </div>
+        <p class="text-body mb-4">No staged corporate stock, no party/drinking, no over-edited filters.</p>
+        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:var(--space-2);">
+          <% ["Generic stock photos", "Party scenes", "Over-filtered images", "Unrelated content"].each do |item| %>
+            <li style="display:flex; align-items:center; gap:var(--space-2); font-size:var(--fs-sm); color:var(--neutral-600);">
+              <span style="color:var(--danger);">✕</span> <%= item %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </section>
+
+  <%# Voice & Tone %>
+  <section class="mb-16">
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Voice &amp; Tone</h2>
+    <%= render Ui::CardComponent.new(padding: "p-8") do %>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <% [
+          { title: "Cool", desc: "We're the friend who's both chill and knows their stuff." },
+          { title: "Confident", desc: "Direct, clear language. No fluff, no corporate speak." },
+          { title: "Inspiring", desc: "Make people want to book a camp RIGHT NOW." }
+        ].each do |v| %>
+          <div>
+            <div style="color:var(--sunset-500); font-weight:var(--fw-bold); margin-bottom:var(--space-1);"><%= v[:title] %></div>
+            <p style="font-size:var(--fs-sm); color:var(--neutral-500);"><%= v[:desc] %></p>
+          </div>
+        <% end %>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div style="border-left:4px solid var(--success); padding-left:var(--space-4); padding-top:var(--space-2); padding-bottom:var(--space-2);">
+          <div style="font-size:var(--fs-xs); font-weight:var(--fw-bold); color:var(--success); margin-bottom:var(--space-1);">GOOD</div>
+          <p style="color:var(--neutral-600); font-style:italic;">"Train on sand, level up fast. Find your next beach volleyball camp."</p>
+        </div>
+        <div style="border-left:4px solid var(--danger); padding-left:var(--space-4); padding-top:var(--space-2); padding-bottom:var(--space-2);">
+          <div style="font-size:var(--fs-xs); font-weight:var(--fw-bold); color:var(--danger); margin-bottom:var(--space-1);">BAD</div>
+          <p style="color:var(--neutral-600); font-style:italic; text-decoration:line-through;">"Yo come party at the beach and maybe play some volleyball lol"</p>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <%# Accessibility %>
+  <section>
+    <h2 style="font-weight:var(--fw-extrabold);" class="mb-6">Accessibility</h2>
+    <%= render Ui::CardComponent.new(padding: "p-8") do %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <% [
+          "Color contrast: min 4.5:1 for text",
+          "Visible focus states on all interactives",
+          "Alt text on all images",
+          "Responsive: mobile-first always",
+          "Semantic HTML (headings, nav, main)",
+          "Touch targets: min 44x44px",
+          "Clear form validation & errors",
+          "Keyboard navigation support"
+        ].each do |item| %>
+          <div style="display:flex; align-items:flex-start; gap:var(--space-2);">
+            <span style="color:var(--success); flex-shrink:0; margin-top:2px;">✓</span>
+            <span style="color:var(--neutral-600); font-size:var(--fs-sm);"><%= item %></span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+</div>

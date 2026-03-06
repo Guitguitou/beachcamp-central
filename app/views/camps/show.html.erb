@@ -1,0 +1,99 @@
+<% content_for(:title, "#{@camp.title} — #{t('layouts.application.title')}") %>
+
+<%= render Layout::PublicNavbarComponent.new(current_user: current_user) %>
+
+<main class="container py-12">
+  <div style="display:grid; grid-template-columns:1fr; gap:var(--space-8);">
+
+    <%# Image %>
+    <div style="border-radius:var(--radius-xl); overflow:hidden; aspect-ratio:21/9; background:var(--neutral-200);">
+      <% if @camp.poster.attached? %>
+        <%= image_tag url_for(@camp.poster), alt: @camp.title, style: "width:100%; height:100%; object-fit:cover;" %>
+      <% else %>
+        <div style="width:100%; height:100%; background:linear-gradient(135deg, var(--ocean-300), var(--sunset-300));"></div>
+      <% end %>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 360px; gap:var(--space-8); align-items:start;">
+      <%# Left: Details %>
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <%= render Beachcamp::LevelBadgeComponent.new(level: @camp.level) %>
+          <% if @camp.featured? %>
+            <%= render Ui::BadgeComponent.new(color: "sand") { t("shared.featured") } %>
+          <% end %>
+          <%= render Ui::BadgeComponent.new(color: camp_status_color(@camp)) { @camp.status.humanize } %>
+        </div>
+
+        <h1 class="mb-2"><%= @camp.title %></h1>
+        <p class="text-muted mb-6" style="font-size:var(--fs-body);">
+          📍 <%= @camp.location %>, <%= @camp.country %>
+          &middot; 📅 <%= I18n.l(@camp.start_date, format: :short) %> – <%= I18n.l(@camp.end_date, format: :short) %>
+        </p>
+
+        <%= render Ui::CardComponent.new(padding: "p-6") do %>
+          <h3 class="mb-4"><%= t("camps.show.about") %></h3>
+          <div style="color:var(--neutral-600); line-height:var(--lh-relaxed);">
+            <%= simple_format(@camp.description) %>
+          </div>
+        <% end %>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+          <% [
+            { label: t("camps.show.duration"), value: "#{(@camp.end_date - @camp.start_date).to_i} #{t('shared.days')}" },
+            { label: t("camps.show.min_players"), value: @camp.min_participants },
+            { label: t("camps.show.max_players"), value: @camp.max_participants },
+            { label: t("camps.show.level"), value: t("components.level_badge.#{@camp.level}") }
+          ].each do |stat| %>
+            <%= render Ui::CardComponent.new(padding: "p-4") do %>
+              <div class="ds-stat-card__label"><%= stat[:label] %></div>
+              <div class="ds-stat-card__value" style="font-size:var(--fs-h3);"><%= stat[:value] %></div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Right: Booking sidebar %>
+      <%= render Ui::CardComponent.new(padding: "p-6") do %>
+        <div class="mb-4">
+          <div class="ds-camp-card__price" style="font-size:var(--fs-h2);">
+            &euro;<%= @camp.price_cents / 100 %> <span style="font-size:var(--fs-sm); font-weight:var(--fw-regular); color:var(--neutral-400);"><%= t("shared.per_person") %></span>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <%= render Beachcamp::SpotsIndicatorComponent.new(camp: @camp) %>
+        </div>
+
+        <% if user_signed_in? %>
+          <% existing = current_user.registrations.active.find_by(camp: @camp) %>
+          <% if existing %>
+            <p style="font-size:var(--fs-sm); color:var(--success); font-weight:var(--fw-semibold); margin-bottom:var(--space-3);">✓ <%= t("camps.show.registered") %></p>
+            <%= link_to t("camps.show.cancel_registration"), camp_registration_path(@camp, existing),
+                data: { turbo_method: :delete, turbo_confirm: t("camps.show.cancel_confirm") },
+                class: "ds-btn ds-btn--outline ds-btn--md",
+                style: "width:100%; text-align:center;" %>
+          <% elsif @camp.published? %>
+            <%= form_with url: camp_registrations_path(@camp), method: :post do %>
+              <%= render Ui::ButtonComponent.new(tag: :button, size: "lg", extra_class: "width:100%;") { t("camps.show.book_now") } %>
+            <% end %>
+          <% end %>
+        <% else %>
+          <%= render Ui::ButtonComponent.new(href: new_user_session_path, size: "lg") { t("camps.show.log_in_to_book") } %>
+        <% end %>
+
+        <div style="margin-top:var(--space-6); padding-top:var(--space-4); border-top:1px solid var(--neutral-200);">
+          <div class="flex items-center gap-3">
+            <div style="width:2.5rem; height:2.5rem; background:var(--gradient-sunset); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:var(--fw-bold); font-size:var(--fs-sm);">
+              <%= @camp.organizer.first_name[0] %><%= @camp.organizer.last_name[0] %>
+            </div>
+            <div>
+              <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);"><%= @camp.organizer.full_name %></div>
+              <div style="font-size:var(--fs-xs); color:var(--neutral-500);"><%= t("camps.show.organizer_label") %></div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</main>

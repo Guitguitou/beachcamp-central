@@ -1,0 +1,325 @@
+es:
+  date:
+    formats:
+      short: "%d %b"
+      long: "%d de %B de %Y"
+    day_names: [domingo, lunes, martes, miércoles, jueves, viernes, sábado]
+    abbr_day_names: [dom, lun, mar, mié, jue, vie, sáb]
+    month_names: [~, enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
+    abbr_month_names: [~, ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
+
+  shared:
+    back: "Volver"
+    cancel: "Cancelar"
+    save: "Guardar"
+    search: "Buscar"
+    next: "Siguiente"
+    previous: "Anterior"
+    view: "Ver"
+    edit: "Editar"
+    delete: "Eliminar"
+    confirm: "Confirmar"
+    send: "Enviar"
+    or: "o"
+    per_person: "/ persona"
+    featured: "Destacado"
+    days: "días"
+    spots: "plazas"
+    total: "total"
+    all_countries: "Todos los países"
+
+  layouts:
+    application:
+      title: "BeachCamp"
+      meta_name: "BeachCamp"
+    organizer:
+      title: "Organizador — BeachCamp"
+
+  components:
+    navbar:
+      brand: "BeachCamp"
+      explore: "Explorar camps"
+      dashboard: "Panel"
+      my_camps: "Mis camps"
+      sign_out: "Cerrar sesión"
+      log_in: "Iniciar sesión"
+      sign_up: "Registrarse"
+    sidebar:
+      dashboard: "Panel"
+      my_camps: "Mis camps"
+      create_camp: "Crear camp"
+      messages: "Mensajes"
+      back_to_site: "Volver al sitio"
+    spots:
+      full: "Completo"
+      spots_left:
+        one: "%{count} plaza disponible"
+        other: "%{count} plazas disponibles"
+    camp_card:
+      featured: "Destacado"
+      per_person: "/ persona"
+    level_badge:
+      beginner: "Principiante"
+      intermediate: "Intermedio"
+      advanced: "Avanzado"
+      pro: "Pro"
+      international: "Internacional"
+    locale_switcher:
+      label: "Idioma"
+
+  camps:
+    index:
+      title: "Explorar camps — BeachCamp"
+      hero_title_prefix: "Encuentra tu próximo"
+      hero_title_highlight: "Beach Camp"
+      hero_subtitle: "Únete a camps de vóley playa en todo el mundo. Entrena, compite y conecta con jugadores de todos los niveles."
+      search_placeholder: "¿Dónde? (ciudad, país...)"
+      search_date_placeholder: "¿Cuándo? (fechas)"
+      hero_stat_camps: "200+ camps en el mundo"
+      hero_stat_levels: "Todos los niveles"
+      hero_stat_organizers: "Organizadores verificados"
+      filter_available: "Disponibles"
+      filter_featured: "Destacados"
+      filter_beginner: "Principiante"
+      filter_intermediate: "Intermedio"
+      filter_advanced: "Avanzado"
+      filter_pro: "Pro"
+      filter_international: "Internacional"
+      empty_icon: "🏖️"
+      empty_title: "No se encontraron camps"
+      empty_text: "¡Intenta ajustar tus filtros o vuelve pronto!"
+    show:
+      about: "Sobre este camp"
+      duration: "Duración"
+      min_players: "Jugadores mín"
+      max_players: "Jugadores máx"
+      level: "Nivel"
+      registered: "¡Estás inscrito!"
+      cancel_registration: "Cancelar inscripción"
+      cancel_confirm: "¿Cancelar tu inscripción?"
+      book_now: "Reservar"
+      log_in_to_book: "Inicia sesión para reservar"
+      organizer_label: "Organizador"
+
+  camp_registrations:
+    create:
+      success: "¡Inscripción exitosa! Nos vemos en la arena."
+    destroy:
+      success: "Inscripción cancelada."
+
+  player:
+    dashboard:
+      show:
+        title: "Mi panel — BeachCamp"
+        greeting: "Hola, %{name} 👋"
+        subtitle: "Tu panel de vóley playa"
+        upcoming_title: "Próximos camps"
+        empty_icon: "🏐"
+        empty_title: "No hay camps próximos"
+        empty_text: "¡Encuentra tu próxima aventura de vóley playa!"
+        explore: "Explorar camps"
+        suggested_title: "Sugeridos para ti"
+        suggested_subtitle: "Basado en tu nivel %{level}"
+    registrations:
+      index:
+        title: "Mis inscripciones — BeachCamp"
+        heading: "Mis inscripciones"
+        col_camp: "Camp"
+        col_dates: "Fechas"
+        col_level: "Nivel"
+        col_status: "Estado"
+        cancel_confirm: "¿Cancelar inscripción?"
+        empty_icon: "📋"
+        empty_title: "Sin inscripciones"
+        empty_text: "¡Explora los camps y reserva tu plaza!"
+        explore: "Explorar camps"
+      destroy:
+        success: "Inscripción cancelada."
+
+  organizer:
+    dashboard:
+      show:
+        title: "Panel del organizador — BeachCamp"
+        heading: "Panel"
+        welcome: "¡Bienvenido, %{name}!"
+        stat_total_camps: "Total camps"
+        stat_published: "Publicados"
+        stat_registrations: "Inscripciones"
+        stat_revenue: "Ingresos"
+        your_camps: "Tus camps"
+        create_camp: "+ Crear camp"
+        col_camp: "Camp"
+        col_dates: "Fechas"
+        col_level: "Nivel"
+        col_status: "Estado"
+        col_registrations: "Inscripciones"
+        empty_icon: "🏕"
+        empty_title: "Sin camps"
+        empty_text: "¡Crea tu primer camp de vóley playa!"
+    camps:
+      index:
+        title: "Mis camps — Organizador"
+        heading: "Mis camps"
+        create_camp: "+ Crear camp"
+        spots: "plazas"
+        empty_icon: "🏕"
+        empty_title: "Sin camps"
+        empty_text: "¡Crea tu primer camp de vóley playa!"
+      show:
+        publish: "Publicar"
+        publish_confirm: "¿Publicar este camp?"
+        cancel_camp: "Cancelar camp"
+        cancel_confirm: "¿Cancelar este camp? Todas las inscripciones serán canceladas."
+        location: "Ubicación"
+        dates: "Fechas"
+        price: "Precio"
+        spots: "Plazas"
+        description: "Descripción"
+        registrations: "Inscripciones"
+        view_all: "Ver todo →"
+        col_player: "Jugador"
+        col_email: "Email"
+        col_status: "Estado"
+        col_date: "Fecha"
+      new:
+        title: "Crear camp — BeachCamp"
+        heading: "Crear un camp"
+        subtitle: "Configura tu camp de vóley playa en 4 pasos"
+        step_basics: "Datos"
+        step_level: "Nivel y capacidad"
+        step_price: "Precio y medios"
+        step_review: "Revisión"
+        basics_heading: "Datos básicos"
+        field_title: "Nombre del camp"
+        field_title_placeholder: "ej. Intensivo de vóley playa verano"
+        field_description: "Descripción"
+        field_description_placeholder: "Describe tu camp..."
+        field_location: "Ubicación"
+        field_location_placeholder: "ej. Playa de Copacabana"
+        field_country: "País"
+        field_country_placeholder: "ej. Brasil"
+        field_start_date: "Fecha de inicio"
+        field_end_date: "Fecha de fin"
+        level_heading: "Nivel y capacidad"
+        field_level: "Nivel"
+        field_min_participants: "Participantes mín"
+        field_max_participants: "Participantes máx"
+        price_heading: "Precio y medios"
+        field_price: "Precio (céntimos)"
+        field_price_helper: "ej. 29900 = 299€"
+        field_currency: "Moneda"
+        field_poster: "Póster del camp"
+        field_poster_helper: "Sube una imagen de calidad (1200×630px recomendado)"
+        review_heading: "Revisión y creación"
+        review_text: "Tu camp se creará como <strong>borrador</strong>. Podrás publicarlo desde la página de detalles."
+        submit: "Crear camp (Borrador)"
+      edit:
+        title: "Editar camp"
+        heading: "Editar camp"
+        details_heading: "Detalles del camp"
+        save: "Guardar cambios"
+      create:
+        success: "Camp creado como borrador."
+      update:
+        success: "Camp actualizado."
+      destroy:
+        success: "Camp eliminado."
+      publish:
+        success: "¡El camp ya está en línea!"
+      cancel:
+        success: "Camp cancelado. Todas las inscripciones han sido canceladas."
+    camp_registrations:
+      index:
+        heading: "Inscripciones"
+        col_player: "Jugador"
+        col_email: "Email"
+        col_level: "Nivel"
+        col_status: "Estado"
+        col_registered: "Inscrito el"
+        col_actions: "Acciones"
+      update:
+        success: "Inscripción actualizada."
+        failure: "No se pudo actualizar la inscripción."
+    conversations:
+      index:
+        title: "Mensajes — Organizador"
+        heading: "Mensajes"
+        message_count:
+          one: "%{count} mensaje"
+          other: "%{count} mensajes"
+        last: "Último:"
+        empty_icon: "💬"
+        empty_title: "Sin conversaciones"
+        empty_text: "Las conversaciones aparecerán aquí cuando los jugadores te escriban sobre tus camps."
+      show:
+        conversation: "Conversación del camp"
+        placeholder: "Escribe un mensaje..."
+    messages:
+      create:
+        failure: "No se pudo enviar el mensaje."
+
+  devise_custom:
+    sessions:
+      title: "Iniciar sesión — BeachCamp"
+      heading: "Bienvenido de nuevo"
+      subtitle: "Inicia sesión en tu cuenta"
+      email: "Email"
+      email_placeholder: "tu@ejemplo.com"
+      password: "Contraseña"
+      password_placeholder: "••••••••"
+      remember_me: "Recordarme"
+      forgot_password: "¿Olvidaste tu contraseña?"
+      submit: "Iniciar sesión"
+      no_account: "¿No tienes cuenta?"
+      sign_up_link: "Regístrate"
+    registrations:
+      title: "Registro — BeachCamp"
+      heading: "Crea tu cuenta"
+      subtitle: "Únete a la comunidad de vóley playa"
+      first_name: "Nombre"
+      first_name_placeholder: "Juan"
+      last_name: "Apellido"
+      last_name_placeholder: "García"
+      email: "Email"
+      email_placeholder: "tu@ejemplo.com"
+      password: "Contraseña"
+      password_helper: "Mínimo 6 caracteres"
+      password_placeholder: "••••••••"
+      confirm_password: "Confirmar contraseña"
+      role_label: "Soy..."
+      role_player: "Jugador"
+      role_organizer: "Organizador"
+      level_label: "Tu nivel"
+      submit: "Crear cuenta"
+      has_account: "¿Ya tienes cuenta?"
+      log_in_link: "Inicia sesión"
+
+  services:
+    camps:
+      register_player:
+        full: "El camp está completo"
+        not_open: "El camp no está abierto a inscripciones"
+        already_registered: "Ya estás inscrito"
+      publish_camp:
+        not_draft: "Solo los borradores se pueden publicar"
+        needs_title: "El camp necesita un título"
+        needs_dates: "El camp necesita fechas"
+      cancel_camp:
+        already_cancelled: "El camp ya está cancelado"
+
+  activerecord:
+    errors:
+      models:
+        registration:
+          attributes:
+            user_id:
+              taken: "ya inscrito en este camp"
+            camp:
+              must_be_published: "debe estar publicado para inscribirse"
+              is_full: "está completo"
+        camp:
+          attributes:
+            end_date:
+              after_start: "debe ser posterior a la fecha de inicio"
+            max_participants:
+              gte_min: "debe ser >= al mínimo de participantes"

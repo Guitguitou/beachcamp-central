@@ -1,0 +1,34 @@
+<% content_for(:title, t("devise_custom.sessions.title")) %>
+
+<div style="min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--neutral-50); padding:var(--space-8);">
+  <div style="width:100%; max-width:420px;">
+    <div style="text-align:center; margin-bottom:var(--space-8);">
+      <a href="<%= root_path %>" style="font-size:1.5rem; font-weight:var(--fw-extrabold); color:var(--neutral-900); text-decoration:none;">
+        🏐 <span class="gradient-text-sunset">BeachCamp</span>
+      </a>
+    </div>
+
+    <%= render Ui::CardComponent.new(padding: "p-8") do %>
+      <h2 style="text-align:center; margin-bottom:var(--space-2);"><%= t("devise_custom.sessions.heading") %></h2>
+      <p style="text-align:center; color:var(--neutral-500); font-size:var(--fs-sm); margin-bottom:var(--space-6);"><%= t("devise_custom.sessions.subtitle") %></p>
+
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <%= render Ui::InputComponent.new(name: :email, label: t("devise_custom.sessions.email"), type: "email", form: f, placeholder: t("devise_custom.sessions.email_placeholder"), required: true) %>
+        <%= render Ui::InputComponent.new(name: :password, label: t("devise_custom.sessions.password"), type: "password", form: f, placeholder: t("devise_custom.sessions.password_placeholder"), required: true) %>
+
+        <div class="flex items-center justify-between mb-6">
+          <label style="display:flex; align-items:center; gap:var(--space-2); font-size:var(--fs-sm); color:var(--neutral-600); cursor:pointer;">
+            <%= f.check_box :remember_me %> <%= t("devise_custom.sessions.remember_me") %>
+          </label>
+          <%= link_to t("devise_custom.sessions.forgot_password"), new_password_path(resource_name), style: "font-size:var(--fs-sm); color:var(--sunset-500);" %>
+        </div>
+
+        <%= f.submit t("devise_custom.sessions.submit"), class: "ds-btn ds-btn--primary ds-btn--lg", style: "width:100%;" %>
+      <% end %>
+    <% end %>
+
+    <p style="text-align:center; margin-top:var(--space-6); font-size:var(--fs-sm); color:var(--neutral-500);">
+      <%= t("devise_custom.sessions.no_account") %> <%= link_to t("devise_custom.sessions.sign_up_link"), new_registration_path(resource_name), style: "color:var(--sunset-500); font-weight:var(--fw-semibold);" %>
+    </p>
+  </div>
+</div>
