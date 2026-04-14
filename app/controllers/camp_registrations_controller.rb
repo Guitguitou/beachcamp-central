@@ -6,9 +6,9 @@ class CampRegistrationsController < ApplicationController
     result = Camps::RegisterPlayer.new(camp: @camp, user: current_user).call
 
     if result.success?
-      redirect_to @camp, notice: t("camp_registrations.create.success")
+      redirect_to camp_path(@camp), notice: t("camp_registrations.create.success")
     else
-      redirect_to @camp, alert: result.error
+      redirect_to camp_path(@camp), alert: result.error
     end
   end
 

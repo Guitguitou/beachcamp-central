@@ -20,9 +20,9 @@
         <div class="flex items-center gap-3 mb-4">
           <%= render Beachcamp::LevelBadgeComponent.new(level: @camp.level) %>
           <% if @camp.featured? %>
-            <%= render Ui::BadgeComponent.new(color: "sand") { t("shared.featured") } %>
+            <%= render(Ui::BadgeComponent.new(color: "sand")) { t("shared.featured") } %>
           <% end %>
-          <%= render Ui::BadgeComponent.new(color: camp_status_color(@camp)) { @camp.status.humanize } %>
+          <%= render(Ui::BadgeComponent.new(color: camp_status_color(@camp))) { @camp.status.humanize } %>
         </div>
 
         <h1 class="mb-2"><%= @camp.title %></h1>
@@ -67,19 +67,43 @@
 
         <% if user_signed_in? %>
           <% existing = current_user.registrations.active.find_by(camp: @camp) %>
-          <% if existing %>
-            <p style="font-size:var(--fs-sm); color:var(--success); font-weight:var(--fw-semibold); margin-bottom:var(--space-3);">✓ <%= t("camps.show.registered") %></p>
+          <% if existing&.confirmed? %>
+            <div style="background:var(--success-50, #f0fdf4); border:1px solid var(--success-200, #bbf7d0); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-4);">
+              <p style="font-size:var(--fs-sm); color:var(--success); font-weight:var(--fw-semibold); margin-bottom:var(--space-1);">✓ <%= t("camps.show.registered") %></p>
+              <p style="font-size:var(--fs-xs); color:var(--neutral-600); margin-bottom:0;"><%= t("camps.show.confirmed_text", default: "Votre place est confirmée par le coach.") %></p>
+            </div>
             <%= link_to t("camps.show.cancel_registration"), camp_registration_path(@camp, existing),
                 data: { turbo_method: :delete, turbo_confirm: t("camps.show.cancel_confirm") },
-                class: "ds-btn ds-btn--outline ds-btn--md",
+                class: "ds-btn ds-btn--outline ds-btn--sm",
+                style: "width:100%; text-align:center;" %>
+          <% elsif existing&.pending? %>
+            <div style="background:var(--sunset-50, #fff7ed); border:1px solid var(--sunset-200, #fed7aa); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-4);">
+              <p style="font-size:var(--fs-sm); color:var(--sunset-700); font-weight:var(--fw-semibold); margin-bottom:var(--space-1);">⏳ <%= t("camps.show.pending_title", default: "Inscription en attente") %></p>
+              <p style="font-size:var(--fs-xs); color:var(--neutral-600); margin-bottom:0;">
+                <%= t("camps.show.pending_text", default: "Le coach va examiner votre demande et vous confirmera par email.") %>
+              </p>
+              <% if @camp.coach.present? %>
+                <a href="mailto:<%= @camp.coach.email %>" style="display:inline-block; margin-top:var(--space-3); font-size:var(--fs-xs); color:var(--ocean-600); font-weight:var(--fw-semibold);">
+                  ✉️ <%= t("camps.show.contact_coach", default: "Contacter le coach") %> → <%= @camp.coach.email %>
+                </a>
+              <% end %>
+            </div>
+            <%= link_to t("camps.show.cancel_registration"), camp_registration_path(@camp, existing),
+                data: { turbo_method: :delete, turbo_confirm: t("camps.show.cancel_confirm") },
+                class: "ds-btn ds-btn--outline ds-btn--sm",
                 style: "width:100%; text-align:center;" %>
           <% elsif @camp.published? %>
             <%= form_with url: camp_registrations_path(@camp), method: :post do %>
-              <%= render Ui::ButtonComponent.new(tag: :button, size: "lg", extra_class: "width:100%;") { t("camps.show.book_now") } %>
+              <%= render(Ui::ButtonComponent.new(tag: :button, size: "lg", style: "width:100%;")) { t("camps.show.book_now") } %>
+            <% end %>
+            <% if @camp.coach.present? %>
+              <p style="margin-top:var(--space-3); font-size:var(--fs-xs); color:var(--neutral-500); text-align:center;">
+                <%= t("camps.show.registration_note", default: "Votre inscription sera validée par le coach.") %>
+              </p>
             <% end %>
           <% end %>
         <% else %>
-          <%= render Ui::ButtonComponent.new(href: new_user_session_path, size: "lg") { t("camps.show.log_in_to_book") } %>
+          <%= render(Ui::ButtonComponent.new(href: new_user_session_path, size: "lg")) { t("camps.show.log_in_to_book") } %>
         <% end %>
 
         <div style="margin-top:var(--space-6); padding-top:var(--space-4); border-top:1px solid var(--neutral-200);">
@@ -93,6 +117,30 @@
             </div>
           </div>
         </div>
+
+        <% if @camp.coach.present? %>
+          <div style="margin-top:var(--space-4); padding-top:var(--space-4); border-top:1px solid var(--neutral-200);">
+            <div class="flex items-center gap-3">
+              <% if @camp.coach.avatar.attached? %>
+                <%= image_tag @camp.coach.avatar.variant(resize_to_fill: [40, 40]),
+                  style: "width:2.5rem;height:2.5rem;border-radius:50%;object-fit:cover;" %>
+              <% else %>
+                <div style="width:2.5rem; height:2.5rem; background:var(--gradient-ocean); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:var(--fw-bold); font-size:var(--fs-sm);">
+                  <%= @camp.coach.first_name[0] %><%= @camp.coach.last_name[0] %>
+                </div>
+              <% end %>
+              <div>
+                <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);"><%= @camp.coach.full_name %></div>
+                <div style="font-size:var(--fs-xs); color:var(--neutral-500);"><%= t("camps.show.coach_label", default: "Coach") %></div>
+              </div>
+            </div>
+            <% if @camp.coach.bio.present? %>
+              <p style="margin-top:var(--space-3); font-size:var(--fs-xs); color:var(--neutral-600); line-height:var(--lh-relaxed);">
+                <%= truncate(@camp.coach.bio, length: 120) %>
+              </p>
+            <% end %>
+          </div>
+        <% end %>
       <% end %>
     </div>
   </div>

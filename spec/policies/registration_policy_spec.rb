@@ -17,10 +17,10 @@ RSpec.describe RegistrationPolicy, type: :policy do
     end
 
     context "when user is an organizer" do
-      it "denies registration (organizers cannot register as players)" do
+      it "allows registration (organizer is also always a player)" do
         reg = Registration.new(user: organizer, camp: camp)
         policy = RegistrationPolicy.new(organizer, reg)
-        expect(policy.create?).to be false
+        expect(policy.create?).to be true
       end
     end
   end

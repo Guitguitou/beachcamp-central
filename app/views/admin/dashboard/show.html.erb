@@ -1,0 +1,26 @@
+<% content_for(:title, "Dashboard Admin — BeachCamp") %>
+
+<h1 class="mb-2">Administration</h1>
+<p class="text-muted mb-8">Vue d'ensemble de la plateforme</p>
+
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+  <% [
+    { label: "Utilisateurs total", value: @total_users, icon: "👥" },
+    { label: "Joueurs", value: @players_count, icon: "🏐" },
+    { label: "Coachs", value: @coaches_count, icon: "🎽" },
+    { label: "Organisateurs", value: @organizers_count, icon: "📋" },
+    { label: "Camps total", value: @total_camps, icon: "🏕️" },
+    { label: "Camps publiés", value: @published_camps, icon: "✅" }
+  ].each do |stat| %>
+    <%= render Ui::CardComponent.new(padding: "p-6") do %>
+      <div style="font-size:1.5rem; margin-bottom:var(--space-2);"><%= stat[:icon] %></div>
+      <div class="ds-stat-card__value" style="font-size:var(--fs-h3);"><%= stat[:value] %></div>
+      <div class="ds-stat-card__label"><%= stat[:label] %></div>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="flex gap-3">
+  <%= link_to "Gérer les utilisateurs", admin_users_path, class: "ds-btn ds-btn--primary ds-btn--md" %>
+  <%= link_to "Gérer les camps", organizer_camps_path, class: "ds-btn ds-btn--outline ds-btn--md" %>
+</div>

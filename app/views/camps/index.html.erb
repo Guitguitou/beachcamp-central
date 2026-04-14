@@ -20,7 +20,7 @@
           <div class="ds-search-divider"></div>
           <input type="text" name="country" value="<%= params[:country] %>" placeholder="<%= t("camps.index.search_date_placeholder") %>" onfocus="(this.type='date')" onblur="(this.type=this.value?'date':'text')">
           <div class="ds-search-divider"></div>
-          <%= render Ui::ButtonComponent.new(tag: :button) { t("shared.search") } %>
+          <%= render(Ui::ButtonComponent.new(tag: :button)) { t("shared.search") } %>
         </div>
       <% end %>
 

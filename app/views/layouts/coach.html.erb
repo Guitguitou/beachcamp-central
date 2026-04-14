@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <title><%= content_for(:title) || t("layouts.coach.title", default: "Coach — BeachCamp") %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="/icon.png" type="image/png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body style="margin:0;">
+    <div class="layout-with-sidebar">
+      <aside class="layout-sidebar">
+        <div class="sidebar-header">
+          <a href="<%= root_path %>" style="font-size:1.25rem; font-weight:var(--fw-extrabold); color:var(--neutral-900); text-decoration:none;">
+            🏐 <span class="gradient-text-sunset">BeachCamp</span>
+          </a>
+          <div style="font-size:var(--fs-xs); color:var(--neutral-500); margin-top:2px;">Espace Coach</div>
+        </div>
+        <nav class="sidebar-nav">
+          <%= link_to "🏠 Tableau de bord", coach_dashboard_path, class: "sidebar-nav__item #{request.path.include?('dashboard') ? 'sidebar-nav__item--active' : ''}" %>
+          <%= link_to "🏕️ Mes camps", coach_camps_path, class: "sidebar-nav__item #{request.path.include?('/coach/camps') ? 'sidebar-nav__item--active' : ''}" %>
+        </nav>
+        <div class="sidebar-footer">
+          <%= link_to "Mon profil", edit_user_registration_path, class: "sidebar-nav__item" %>
+          <%= link_to "← Site public", root_path, class: "sidebar-nav__item" %>
+          <%= link_to "Déconnexion", destroy_user_session_path, data: { turbo_method: :delete }, class: "sidebar-nav__item" %>
+        </div>
+      </aside>
+
+      <div class="layout-with-sidebar__content">
+        <% if notice.present? %>
+          <div class="ds-flash ds-flash--notice"><%= notice %></div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="ds-flash ds-flash--alert"><%= alert %></div>
+        <% end %>
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>

@@ -29,7 +29,7 @@ module Ui
       attrs[:href] = @href if @href
       attrs[:data] = (@html_attrs[:data] || {}).merge(turbo_method: @method) if @method
 
-      content_tag(@tag_name, content, **attrs)
+      tag.public_send(@tag_name, content, **attrs)
     end
 
     private

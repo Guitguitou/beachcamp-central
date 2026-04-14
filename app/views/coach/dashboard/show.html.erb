@@ -1,0 +1,58 @@
+<% content_for(:title, "Dashboard Coach — BeachCamp") %>
+
+<h1 class="mb-2">Bonjour, <%= current_user.first_name %> 👋</h1>
+<p class="text-muted mb-8">Gérez vos camps et validez les inscriptions</p>
+
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+  <%= render Ui::CardComponent.new(padding: "p-6") do %>
+    <div style="font-size:1.5rem; margin-bottom:var(--space-2);">🏕️</div>
+    <div class="ds-stat-card__value" style="font-size:var(--fs-h3);"><%= @camps.count %></div>
+    <div class="ds-stat-card__label">Camps assignés</div>
+  <% end %>
+  <%= render Ui::CardComponent.new(padding: "p-6") do %>
+    <div style="font-size:1.5rem; margin-bottom:var(--space-2);">⏳</div>
+    <div class="ds-stat-card__value" style="font-size:var(--fs-h3); color:var(--sunset-600);"><%= @pending_count %></div>
+    <div class="ds-stat-card__label">Inscriptions en attente</div>
+  <% end %>
+  <%= render Ui::CardComponent.new(padding: "p-6") do %>
+    <div style="font-size:1.5rem; margin-bottom:var(--space-2);">✅</div>
+    <div class="ds-stat-card__value" style="font-size:var(--fs-h3); color:var(--success);"><%= @confirmed_count %></div>
+    <div class="ds-stat-card__label">Inscrits confirmés</div>
+  <% end %>
+</div>
+
+<% if @camps.any? %>
+  <h2 class="mb-4">Mes camps</h2>
+  <div style="display:flex; flex-direction:column; gap:var(--space-4);">
+    <% @camps.each do |camp| %>
+      <% pending = camp.registrations.pending.count %>
+      <%= render Ui::CardComponent.new(padding: "p-6") do %>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-4);">
+          <div>
+            <div style="font-weight:var(--fw-semibold); font-size:var(--fs-body); margin-bottom:var(--space-1);"><%= camp.title %></div>
+            <div style="font-size:var(--fs-sm); color:var(--neutral-500);">
+              📍 <%= camp.location %> &middot; 📅 <%= I18n.l(camp.start_date, format: :short) %> – <%= I18n.l(camp.end_date, format: :short) %>
+            </div>
+            <div style="margin-top:var(--space-2); display:flex; gap:var(--space-2);">
+              <%= render Beachcamp::LevelBadgeComponent.new(level: camp.level) %>
+              <%= render(Ui::BadgeComponent.new(color: camp_status_color(camp))) { camp.status.humanize } %>
+              <% if pending > 0 %>
+                <%= render(Ui::BadgeComponent.new(color: "sunset")) { "#{pending} en attente" } %>
+              <% end %>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <%= link_to "Gérer les inscriptions", coach_camp_registrations_path(camp), class: "ds-btn ds-btn--primary ds-btn--sm" %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <%= render Ui::CardComponent.new(padding: "p-12") do %>
+    <div style="text-align:center; color:var(--neutral-400);">
+      <div style="font-size:3rem; margin-bottom:var(--space-4);">🎽</div>
+      <p>Aucun camp ne vous est encore assigné.<br>L'organisateur doit vous sélectionner lors de la création du camp.</p>
+    </div>
+  <% end %>
+<% end %>

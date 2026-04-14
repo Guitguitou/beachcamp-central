@@ -28,7 +28,7 @@
               <td><%= render Beachcamp::LevelBadgeComponent.new(level: reg.camp.level) %></td>
               <td>
                 <% color = case reg.status; when "confirmed" then "success"; when "pending" then "warning"; else "danger"; end %>
-                <%= render Ui::BadgeComponent.new(color: color) { reg.status.humanize } %>
+                <%= render(Ui::BadgeComponent.new(color: color)) { reg.status.humanize } %>
               </td>
               <td>
                 <% unless reg.cancelled? %>
@@ -48,7 +48,7 @@
       <div class="ds-empty__icon"><%= t("player.registrations.index.empty_icon") %></div>
       <div class="ds-empty__title"><%= t("player.registrations.index.empty_title") %></div>
       <p class="ds-empty__text"><%= t("player.registrations.index.empty_text") %></p>
-      <%= render Ui::ButtonComponent.new(href: camps_path) { t("player.registrations.index.explore") } %>
+      <%= render(Ui::ButtonComponent.new(href: camps_path)) { t("player.registrations.index.explore") } %>
     </div>
   <% end %>
 </main>

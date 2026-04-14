@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_05_163303) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_14_124148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,7 +42,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_163303) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "camp_staff_memberships", force: :cascade do |t|
+    t.bigint "camp_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["camp_id", "user_id"], name: "index_camp_staff_memberships_on_camp_id_and_user_id", unique: true
+    t.index ["camp_id"], name: "index_camp_staff_memberships_on_camp_id"
+    t.index ["user_id"], name: "index_camp_staff_memberships_on_user_id"
+  end
+
   create_table "camps", force: :cascade do |t|
+    t.bigint "coach_id"
     t.string "country", null: false
     t.datetime "created_at", null: false
     t.string "currency", default: "EUR", null: false
@@ -59,6 +71,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_163303) do
     t.integer "status", default: 0, null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
+    t.index ["coach_id"], name: "index_camps_on_coach_id"
     t.index ["organizer_id"], name: "index_camps_on_organizer_id"
   end
 
@@ -91,23 +104,36 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_163303) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.boolean "admin", default: false, null: false
+    t.text "bio"
+    t.boolean "coach", default: false, null: false
+    t.text "coach_bio"
+    t.string "coach_headline"
+    t.text "coach_track_record"
     t.datetime "created_at", null: false
+    t.date "date_of_birth"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "first_name", default: "", null: false
     t.string "last_name", default: "", null: false
     t.integer "level", default: 0, null: false
+    t.boolean "organizer", default: false, null: false
+    t.string "phone"
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
-    t.integer "role", default: 0, null: false
+    t.string "slug"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["slug"], name: "index_users_on_slug", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "camp_staff_memberships", "camps"
+  add_foreign_key "camp_staff_memberships", "users"
+  add_foreign_key "camps", "users", column: "coach_id"
   add_foreign_key "camps", "users", column: "organizer_id"
   add_foreign_key "conversations", "camps"
   add_foreign_key "messages", "conversations"

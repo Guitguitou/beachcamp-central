@@ -48,6 +48,14 @@
           <%= render Ui::InputComponent.new(name: :min_participants, label: t("organizer.camps.new.field_min_participants"), type: "number", form: f, input_html: { min: 1, value: 4 }) %>
           <%= render Ui::InputComponent.new(name: :max_participants, label: t("organizer.camps.new.field_max_participants"), type: "number", form: f, input_html: { min: 1, value: 16 }) %>
         </div>
+        <div class="form-group">
+          <label class="form-label"><%= t("organizer.camps.new.field_coach", default: "Coach assigné") %></label>
+          <%= f.select :coach_id,
+            User.coaches.map { |c| [c.full_name, c.id] },
+            { include_blank: t("organizer.camps.new.field_coach_blank", default: "— Aucun coach —") },
+            class: "form-input" %>
+          <p class="form-helper"><%= t("organizer.camps.new.field_coach_helper", default: "Optionnel — le coach apparaîtra sur la fiche publique du camp") %></p>
+        </div>
         <div style="display:flex; justify-content:space-between; margin-top:var(--space-6);">
           <button type="button" class="ds-btn ds-btn--outline ds-btn--md" data-action="stepper#prev">← <%= t("shared.back") %></button>
           <button type="button" class="ds-btn ds-btn--primary ds-btn--md" data-action="stepper#next"><%= t("shared.next") %> →</button>

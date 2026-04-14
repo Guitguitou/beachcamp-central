@@ -12,7 +12,7 @@ module Camps
       return failure(I18n.t("services.camps.register_player.not_open"))           unless @camp.published?
       return failure(I18n.t("services.camps.register_player.already_registered")) if already_registered?
 
-      registration = @camp.registrations.build(user: @user, status: :confirmed)
+      registration = @camp.registrations.build(user: @user, status: :pending)
 
       if registration.save
         Result.new("success?": true, registration: registration, error: nil)

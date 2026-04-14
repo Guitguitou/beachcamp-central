@@ -15,10 +15,15 @@ module Layout
           <ul class="ds-navbar__links hidden-mobile">
             <li><%= link_to t("components.navbar.explore"), camps_path, class: "ds-navbar__link" %></li>
             <% if @current_user %>
+              <li><%= link_to t("components.navbar.my_camps"), player_dashboard_path, class: "ds-navbar__link" %></li>
               <% if @current_user.organizer? %>
-                <li><%= link_to t("components.navbar.dashboard"), organizer_dashboard_path, class: "ds-navbar__link" %></li>
-              <% else %>
-                <li><%= link_to t("components.navbar.my_camps"), player_dashboard_path, class: "ds-navbar__link" %></li>
+                <li><%= link_to "Organiser", organizer_dashboard_path, class: "ds-navbar__link" %></li>
+              <% end %>
+              <% if @current_user.coach? %>
+                <li><%= link_to "Coach", coach_dashboard_path, class: "ds-navbar__link" %></li>
+              <% end %>
+              <% if @current_user.admin? %>
+                <li><%= link_to "Admin", admin_dashboard_path, class: "ds-navbar__link" %></li>
               <% end %>
               <li><%= link_to t("components.navbar.sign_out"), destroy_user_session_path, data: { turbo_method: :delete }, class: "ds-navbar__link" %></li>
             <% else %>
@@ -43,10 +48,15 @@ module Layout
           <ul>
             <li><%= link_to t("components.navbar.explore"), camps_path, class: "ds-navbar__link" %></li>
             <% if @current_user %>
+              <li><%= link_to t("components.navbar.my_camps"), player_dashboard_path, class: "ds-navbar__link" %></li>
               <% if @current_user.organizer? %>
-                <li><%= link_to t("components.navbar.dashboard"), organizer_dashboard_path, class: "ds-navbar__link" %></li>
-              <% else %>
-                <li><%= link_to t("components.navbar.my_camps"), player_dashboard_path, class: "ds-navbar__link" %></li>
+                <li><%= link_to "Organiser", organizer_dashboard_path, class: "ds-navbar__link" %></li>
+              <% end %>
+              <% if @current_user.coach? %>
+                <li><%= link_to "Coach", coach_dashboard_path, class: "ds-navbar__link" %></li>
+              <% end %>
+              <% if @current_user.admin? %>
+                <li><%= link_to "Admin", admin_dashboard_path, class: "ds-navbar__link" %></li>
               <% end %>
               <li><%= link_to t("components.navbar.sign_out"), destroy_user_session_path, data: { turbo_method: :delete }, class: "ds-navbar__link" %></li>
             <% else %>

@@ -1,42 +1,124 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<% content_for(:title, t("devise_custom.registrations.edit_title", default: "Mon profil")) %>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+<div style="min-height:100vh; background:var(--neutral-50); padding:var(--space-8);">
+  <div style="max-width:640px; margin:0 auto;">
+    <div style="margin-bottom:var(--space-8);">
+      <h1 style="margin-bottom:var(--space-1);">
+        <%= t("devise_custom.registrations.edit_heading", default: "Mon profil") %>
+      </h1>
+      <p style="color:var(--neutral-500); font-size:var(--fs-sm);">
+        <%= t("devise_custom.registrations.edit_subtitle", default: "Mettez à jour vos informations personnelles") %>
+      </p>
+    </div>
 
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, enctype: "multipart/form-data" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+      <%# ---- Infos personnelles ---- %>
+      <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+        <h3 style="margin-bottom:var(--space-6);">
+          <%= t("devise_custom.registrations.section_identity", default: "Informations personnelles") %>
+        </h3>
+        <div class="grid grid-cols-2 gap-4">
+          <%= render Ui::InputComponent.new(name: :first_name, label: t("devise_custom.registrations.first_name"), form: f, required: true, placeholder: t("devise_custom.registrations.first_name_placeholder")) %>
+          <%= render Ui::InputComponent.new(name: :last_name, label: t("devise_custom.registrations.last_name"), form: f, required: true, placeholder: t("devise_custom.registrations.last_name_placeholder")) %>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <%= render Ui::InputComponent.new(name: :date_of_birth, label: t("devise_custom.registrations.date_of_birth", default: "Date de naissance"), type: "date", form: f) %>
+          <%= render Ui::InputComponent.new(name: :phone, label: t("devise_custom.registrations.phone", default: "Téléphone"), form: f, placeholder: "+33 6 XX XX XX XX") %>
+        </div>
+      <% end %>
 
-  <div class="field">
-    <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i></p>
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-    <% if @minimum_password_length %>
-      <p><em><%= @minimum_password_length %> characters minimum</em></p>
+      <%# ---- Photo de profil ---- %>
+      <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+        <h3 style="margin-bottom:var(--space-6);">
+          <%= t("devise_custom.registrations.section_photo", default: "Photo de profil") %>
+        </h3>
+        <% if resource.avatar.attached? %>
+          <div style="margin-bottom:var(--space-4); display:flex; align-items:center; gap:var(--space-4);">
+            <%= image_tag resource.avatar.variant(resize_to_fill: [80, 80]), style: "width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--neutral-200);" %>
+            <p style="font-size:var(--fs-sm); color:var(--neutral-500);">
+              <%= t("devise_custom.registrations.photo_current", default: "Photo actuelle — téléchargez-en une nouvelle pour la remplacer") %>
+            </p>
+          </div>
+        <% end %>
+        <div class="form-group">
+          <label class="form-label"><%= t("devise_custom.registrations.avatar", default: "Photo (JPG, PNG — max 5 Mo)") %></label>
+          <%= f.file_field :avatar, class: "form-input", accept: "image/*" %>
+        </div>
+      <% end %>
+
+      <%# ---- Profil sportif ---- %>
+      <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+        <h3 style="margin-bottom:var(--space-6);">
+          <%= t("devise_custom.registrations.section_sport", default: "Profil sportif") %>
+        </h3>
+        <div class="form-group">
+          <label class="form-label"><%= t("devise_custom.registrations.level_label") %></label>
+          <%= f.select :level, User.levels.keys.map { |l| [l.humanize, l] }, {}, class: "form-input" %>
+        </div>
+        <div class="form-group">
+          <label class="form-label">
+            <% if resource.coach? %>
+              <%= t("devise_custom.registrations.bio_coach", default: "Palmarès & expérience") %>
+            <% else %>
+              <%= t("devise_custom.registrations.bio_player", default: "À propos de moi") %>
+            <% end %>
+          </label>
+          <%= f.text_area :bio, class: "form-input", rows: 5,
+            placeholder: resource.coach? ?
+              t("devise_custom.registrations.bio_coach_placeholder", default: "Décrivez votre palmarès, vos certifications, votre expérience d'entraîneur...") :
+              t("devise_custom.registrations.bio_player_placeholder", default: "Parlez de votre pratique du beach-volley, votre club, vos objectifs...") %>
+        </div>
+      <% end %>
+
+      <%# ---- Rôles (lecture seule) ---- %>
+      <%= render Ui::CardComponent.new(padding: "p-6", extra_class: "mb-6") do %>
+        <div class="flex items-center justify-between mb-3">
+          <h3 style="margin-bottom:0;">Mes rôles</h3>
+          <span style="font-size:var(--fs-xs); color:var(--neutral-400);">Modifiable par un administrateur uniquement</span>
+        </div>
+        <div class="flex gap-2" style="flex-wrap:wrap;">
+          <%= render(Ui::BadgeComponent.new(color: "ocean")) { "🏐 Joueur" } %>
+          <% if resource.organizer? %>
+            <%= render(Ui::BadgeComponent.new(color: "sunset")) { "📋 Organisateur" } %>
+          <% end %>
+          <% if resource.coach? %>
+            <%= render(Ui::BadgeComponent.new(color: "sand")) { "🎽 Coach" } %>
+          <% end %>
+          <% if resource.admin? %>
+            <%= render(Ui::BadgeComponent.new(color: "sunset")) { "⚙️ Admin" } %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%# ---- Sécurité du compte ---- %>
+      <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+        <h3 style="margin-bottom:var(--space-6);">
+          <%= t("devise_custom.registrations.section_security", default: "Sécurité du compte") %>
+        </h3>
+        <%= render Ui::InputComponent.new(name: :email, label: t("devise_custom.registrations.email"), type: "email", form: f, required: true) %>
+        <%= render Ui::InputComponent.new(name: :password, label: t("devise_custom.registrations.password"), type: "password", form: f, helper: t("devise_custom.registrations.edit_password_helper", default: "Laissez vide pour ne pas changer le mot de passe"), placeholder: t("devise_custom.registrations.password_placeholder")) %>
+        <%= render Ui::InputComponent.new(name: :password_confirmation, label: t("devise_custom.registrations.confirm_password"), type: "password", form: f, placeholder: t("devise_custom.registrations.password_placeholder")) %>
+        <%= render Ui::InputComponent.new(name: :current_password, label: t("devise_custom.registrations.current_password", default: "Mot de passe actuel"), type: "password", form: f, required: true, helper: t("devise_custom.registrations.current_password_helper", default: "Requis pour confirmer les modifications"), placeholder: t("devise_custom.registrations.password_placeholder")) %>
+      <% end %>
+
+      <div class="flex gap-3">
+        <%= f.submit t("devise_custom.registrations.update", default: "Enregistrer les modifications"), class: "ds-btn ds-btn--primary ds-btn--lg" %>
+        <%= link_to t("shared.cancel"), :back, class: "ds-btn ds-btn--outline ds-btn--md" %>
+      </div>
     <% end %>
+
+    <div style="margin-top:var(--space-8); padding-top:var(--space-6); border-top:1px solid var(--neutral-200);">
+      <h4 style="color:var(--neutral-700); margin-bottom:var(--space-3);">
+        <%= t("devise_custom.registrations.danger_zone", default: "Zone de danger") %>
+      </h4>
+      <%= button_to t("devise_custom.registrations.cancel_account", default: "Supprimer mon compte"),
+        registration_path(resource_name),
+        data: { turbo_confirm: t("devise_custom.registrations.cancel_confirm", default: "Êtes-vous sûr ? Cette action est irréversible.") },
+        method: :delete,
+        class: "ds-btn ds-btn--outline ds-btn--sm",
+        style: "color:var(--error-600); border-color:var(--error-300);" %>
+    </div>
   </div>
-
-  <div class="field">
-    <p><%= f.label :password_confirmation %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i></p>
-    <p><%= f.password_field :current_password, autocomplete: "current-password" %></p>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+</div>

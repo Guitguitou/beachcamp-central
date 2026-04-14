@@ -1,0 +1,98 @@
+<% content_for(:title, "Utilisateurs — Admin BeachCamp") %>
+
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="mb-1">Utilisateurs</h1>
+    <p class="text-muted"><%= @users.count %> utilisateur(s)</p>
+  </div>
+</div>
+
+<%# Filtres %>
+<%= form_with url: admin_users_path, method: :get, local: true do |f| %>
+  <div class="flex gap-3 mb-6" style="flex-wrap:wrap;">
+    <input type="text" name="q" value="<%= params[:q] %>" placeholder="Rechercher par nom ou email…" class="form-input" style="flex:1; min-width:200px;">
+    <select name="role" class="form-input" style="width:auto;">
+      <option value="">Tous les rôles</option>
+      <option value="organizer" <%= 'selected' if params[:role] == 'organizer' %>>Organisateur</option>
+      <option value="coach"     <%= 'selected' if params[:role] == 'coach'     %>>Coach</option>
+      <option value="admin"     <%= 'selected' if params[:role] == 'admin'     %>>Admin</option>
+    </select>
+    <button type="submit" class="ds-btn ds-btn--primary ds-btn--md">Filtrer</button>
+    <% if params[:q].present? || params[:role].present? %>
+      <%= link_to "Réinitialiser", admin_users_path, class: "ds-btn ds-btn--outline ds-btn--md" %>
+    <% end %>
+  </div>
+<% end %>
+
+<%= render Ui::CardComponent.new(padding: "p-0") do %>
+  <div style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:var(--neutral-50); border-bottom:1px solid var(--neutral-200);">
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Utilisateur</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Rôle</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Niveau</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Date naiss.</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Inscrit le</th>
+          <th style="padding:var(--space-3) var(--space-4);"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |u| %>
+          <tr style="border-bottom:1px solid var(--neutral-100);">
+            <td style="padding:var(--space-3) var(--space-4);">
+              <div class="flex items-center gap-3">
+                <% if u.avatar.attached? %>
+                  <%= image_tag u.avatar.variant(resize_to_fill: [36, 36]),
+                    style: "width:36px;height:36px;border-radius:50%;object-fit:cover;" %>
+                <% else %>
+                  <div style="width:36px;height:36px;background:var(--gradient-sunset);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:var(--fs-xs);font-weight:var(--fw-bold);">
+                    <%= u.first_name[0] %><%= u.last_name[0] %>
+                  </div>
+                <% end %>
+                <div>
+                  <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);"><%= u.full_name %></div>
+                  <div style="font-size:var(--fs-xs); color:var(--neutral-500);"><%= u.email %></div>
+                  <% if u.phone.present? %>
+                    <div style="font-size:var(--fs-xs); color:var(--neutral-400);"><%= u.phone %></div>
+                  <% end %>
+                </div>
+              </div>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4);">
+              <div class="flex gap-1" style="flex-wrap:wrap;">
+                <%= render(Ui::BadgeComponent.new(color: "ocean")) { "Joueur" } %>
+                <% if u.organizer? %>
+                  <%= render(Ui::BadgeComponent.new(color: "sand")) { "Organisateur" } %>
+                <% end %>
+                <% if u.coach? %>
+                  <%= render(Ui::BadgeComponent.new(color: "neutral")) { "Coach" } %>
+                <% end %>
+                <% if u.admin? %>
+                  <%= render(Ui::BadgeComponent.new(color: "sunset")) { "Admin" } %>
+                <% end %>
+              </div>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-sm); color:var(--neutral-600);">
+              <%= u.level.humanize %>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-sm); color:var(--neutral-600);">
+              <%= u.date_of_birth ? I18n.l(u.date_of_birth, format: :short) : "—" %>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-xs); color:var(--neutral-500);">
+              <%= I18n.l(u.created_at.to_date, format: :short) %>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); text-align:right;">
+              <%= link_to "Modifier", edit_admin_user_path(u), class: "ds-btn ds-btn--outline ds-btn--sm" %>
+            </td>
+          </tr>
+        <% end %>
+        <% if @users.empty? %>
+          <tr>
+            <td colspan="6" style="padding:var(--space-8); text-align:center; color:var(--neutral-400);">Aucun utilisateur trouvé</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

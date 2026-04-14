@@ -1,0 +1,125 @@
+<% content_for(:title, "Inscriptions — #{@camp.title}") %>
+
+<div class="flex items-center gap-3 mb-6">
+  <%= link_to "← Mes camps", coach_camps_path, class: "ds-btn ds-btn--outline ds-btn--sm" %>
+  <div>
+    <h1 class="mb-0"><%= @camp.title %></h1>
+    <p class="text-muted" style="font-size:var(--fs-sm);">
+      📍 <%= @camp.location %> &middot; <%= I18n.l(@camp.start_date, format: :short) %> – <%= I18n.l(@camp.end_date, format: :short) %>
+      &middot; <%= @camp.max_participants %> places max
+    </p>
+  </div>
+</div>
+
+<%# Stats rapides %>
+<div class="grid grid-cols-3 gap-4 mb-8">
+  <%= render Ui::CardComponent.new(padding: "p-4") do %>
+    <div style="text-align:center;">
+      <div style="font-size:var(--fs-h3); font-weight:var(--fw-bold); color:var(--sunset-600);"><%= @pending_registrations.count %></div>
+      <div style="font-size:var(--fs-xs); color:var(--neutral-500);">En attente</div>
+    </div>
+  <% end %>
+  <%= render Ui::CardComponent.new(padding: "p-4") do %>
+    <div style="text-align:center;">
+      <div style="font-size:var(--fs-h3); font-weight:var(--fw-bold); color:var(--success);"><%= @confirmed_registrations.count %></div>
+      <div style="font-size:var(--fs-xs); color:var(--neutral-500);">Confirmés</div>
+    </div>
+  <% end %>
+  <%= render Ui::CardComponent.new(padding: "p-4") do %>
+    <div style="text-align:center;">
+      <div style="font-size:var(--fs-h3); font-weight:var(--fw-bold);"><%= @camp.spots_remaining %> / <%= @camp.max_participants %></div>
+      <div style="font-size:var(--fs-xs); color:var(--neutral-500);">Places restantes</div>
+    </div>
+  <% end %>
+</div>
+
+<%# Inscriptions en attente %>
+<% if @pending_registrations.any? %>
+  <h2 class="mb-4" style="color:var(--sunset-700);">⏳ En attente de validation (<%= @pending_registrations.count %>)</h2>
+  <%= render Ui::CardComponent.new(padding: "p-0", extra_class: "mb-8") do %>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--neutral-50); border-bottom:1px solid var(--neutral-200);">
+            <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase;">Joueur</th>
+            <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase;">Niveau</th>
+            <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase;">Inscrit le</th>
+            <th style="padding:var(--space-3) var(--space-4); text-align:right; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pending_registrations.each do |reg| %>
+            <tr style="border-bottom:1px solid var(--neutral-100);">
+              <td style="padding:var(--space-3) var(--space-4);">
+                <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);"><%= reg.user.full_name %></div>
+                <div style="font-size:var(--fs-xs); color:var(--neutral-500);"><%= reg.user.email %></div>
+              </td>
+              <td style="padding:var(--space-3) var(--space-4);">
+                <%= render Beachcamp::LevelBadgeComponent.new(level: reg.user.level) %>
+              </td>
+              <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-xs); color:var(--neutral-500);">
+                <%= I18n.l(reg.created_at.to_date, format: :short) %>
+              </td>
+              <td style="padding:var(--space-3) var(--space-4); text-align:right;">
+                <div class="flex gap-2" style="justify-content:flex-end;">
+                  <%= form_with url: coach_camp_registration_path(@camp, reg), method: :patch, local: true do |f| %>
+                    <%= f.hidden_field :status, value: "confirmed" %>
+                    <%= f.submit "✓ Confirmer", class: "ds-btn ds-btn--primary ds-btn--sm" %>
+                  <% end %>
+                  <%= form_with url: coach_camp_registration_path(@camp, reg), method: :patch, local: true do |f| %>
+                    <%= f.hidden_field :status, value: "cancelled" %>
+                    <%= f.submit "✗ Refuser", class: "ds-btn ds-btn--outline ds-btn--sm", style: "color:var(--error-600); border-color:var(--error-300);" %>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+<% end %>
+
+<%# Inscrits confirmés %>
+<h2 class="mb-4" style="color:var(--success);">✅ Inscrits confirmés (<%= @confirmed_registrations.count %>)</h2>
+<% if @confirmed_registrations.any? %>
+  <%= render Ui::CardComponent.new(padding: "p-0") do %>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--neutral-50); border-bottom:1px solid var(--neutral-200);">
+            <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase;">Joueur</th>
+            <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase;">Niveau</th>
+            <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase;">Email</th>
+            <th style="padding:var(--space-3) var(--space-4); text-align:right; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @confirmed_registrations.each do |reg| %>
+            <tr style="border-bottom:1px solid var(--neutral-100);">
+              <td style="padding:var(--space-3) var(--space-4);">
+                <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);"><%= reg.user.full_name %></div>
+              </td>
+              <td style="padding:var(--space-3) var(--space-4);">
+                <%= render Beachcamp::LevelBadgeComponent.new(level: reg.user.level) %>
+              </td>
+              <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-sm); color:var(--neutral-600);">
+                <%= reg.user.email %>
+              </td>
+              <td style="padding:var(--space-3) var(--space-4); text-align:right;">
+                <%= form_with url: coach_camp_registration_path(@camp, reg), method: :patch, local: true do |f| %>
+                  <%= f.hidden_field :status, value: "cancelled" %>
+                  <%= f.submit "Retirer", class: "ds-btn ds-btn--outline ds-btn--sm", style: "color:var(--error-600); border-color:var(--error-300);" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+<% else %>
+  <%= render Ui::CardComponent.new(padding: "p-8") do %>
+    <p style="text-align:center; color:var(--neutral-400);">Aucun inscrit confirmé pour l'instant.</p>
+  <% end %>
+<% end %>

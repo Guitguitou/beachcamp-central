@@ -5,7 +5,7 @@
     <h1><%= @camp.title %></h1>
     <div class="flex items-center gap-3 mt-2">
       <%= render Beachcamp::LevelBadgeComponent.new(level: @camp.level) %>
-      <%= render Ui::BadgeComponent.new(color: camp_status_color(@camp)) { @camp.status.humanize } %>
+      <%= render(Ui::BadgeComponent.new(color: camp_status_color(@camp))) { @camp.status.humanize } %>
     </div>
   </div>
   <div class="flex gap-3">
@@ -60,7 +60,7 @@
             <td><%= reg.user.email %></td>
             <td>
               <% color = case reg.status; when "confirmed" then "success"; when "pending" then "warning"; else "danger"; end %>
-              <%= render Ui::BadgeComponent.new(color: color) { reg.status.humanize } %>
+              <%= render(Ui::BadgeComponent.new(color: color)) { reg.status.humanize } %>
             </td>
             <td><%= reg.created_at.strftime("%b %d, %Y") %></td>
           </tr>

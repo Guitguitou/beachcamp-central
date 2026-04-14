@@ -26,7 +26,7 @@
   <%= form_with model: [@conversation, @message], url: organizer_conversation_messages_path(@conversation), local: true do |f| %>
     <div class="flex gap-3">
       <%= f.text_area :body, class: "form-input", placeholder: t("organizer.conversations.show.placeholder"), rows: 2, style: "flex:1;" %>
-      <%= render Ui::ButtonComponent.new(tag: :button) { t("shared.send") } %>
+      <%= render(Ui::ButtonComponent.new(tag: :button)) { t("shared.send") } %>
     </div>
   <% end %>
 <% end %>

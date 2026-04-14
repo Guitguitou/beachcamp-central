@@ -100,6 +100,12 @@ en:
       book_now: "Book Now"
       log_in_to_book: "Log in to Book"
       organizer_label: "Organizer"
+      coach_label: "Coach"
+      pending_title: "Registration pending"
+      pending_text: "The coach will review your request and confirm by email."
+      contact_coach: "Contact the coach"
+      confirmed_text: "Your spot is confirmed by the coach."
+      registration_note: "Your registration will be validated by the coach."
 
   # --- Camp Registrations ---
   camp_registrations:
@@ -207,6 +213,9 @@ en:
         field_level: "Level"
         field_min_participants: "Min Participants"
         field_max_participants: "Max Participants"
+        field_coach: "Assigned Coach"
+        field_coach_blank: "— No coach —"
+        field_coach_helper: "Optional — the coach will appear on the public camp page"
         price_heading: "Price & Media"
         field_price: "Price (cents)"
         field_price_helper: "e.g. 29900 = €299"
@@ -297,6 +306,34 @@ en:
       submit: "Create Account"
       has_account: "Already have an account?"
       log_in_link: "Log in"
+      edit_title: "My Profile — BeachCamp"
+      edit_heading: "My Profile"
+      edit_subtitle: "Update your personal information"
+      section_identity: "Personal Information"
+      section_photo: "Profile Picture"
+      section_sport: "Sports Profile"
+      section_security: "Account Security"
+      date_of_birth: "Date of Birth"
+      phone: "Phone"
+      avatar: "Photo (JPG, PNG — max 5 MB)"
+      photo_current: "Current photo — upload a new one to replace it"
+      bio_coach: "Achievements & Experience"
+      bio_player: "About Me"
+      bio_coach_placeholder: "Describe your achievements, certifications, coaching experience..."
+      bio_player_placeholder: "Tell us about your beach volleyball practice, your club, your goals..."
+      current_password: "Current Password"
+      current_password_helper: "Required to confirm changes"
+      edit_password_helper: "Leave blank to keep current password"
+      update: "Save Changes"
+      danger_zone: "Danger Zone"
+      cancel_account: "Delete My Account"
+      cancel_confirm: "Are you sure? This action is irreversible."
+
+  admin:
+    unauthorized: "Access restricted to administrators."
+    users:
+      update:
+        success: "User updated."
 
   # --- Services ---
   services:

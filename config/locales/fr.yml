@@ -100,6 +100,12 @@ fr:
       book_now: "Réserver"
       log_in_to_book: "Connectez-vous pour réserver"
       organizer_label: "Organisateur"
+      coach_label: "Coach"
+      pending_title: "Inscription en attente"
+      pending_text: "Le coach va examiner votre demande et vous confirmera par email."
+      contact_coach: "Contacter le coach"
+      confirmed_text: "Votre place est confirmée par le coach."
+      registration_note: "Votre inscription sera validée par le coach."
 
   camp_registrations:
     create:
@@ -204,6 +210,9 @@ fr:
         field_level: "Niveau"
         field_min_participants: "Participants min"
         field_max_participants: "Participants max"
+        field_coach: "Coach assigné"
+        field_coach_blank: "— Aucun coach —"
+        field_coach_helper: "Optionnel — le coach apparaîtra sur la fiche publique du camp"
         price_heading: "Prix & Médias"
         field_price: "Prix (centimes)"
         field_price_helper: "ex. 29900 = 299€"
@@ -293,6 +302,34 @@ fr:
       submit: "Créer mon compte"
       has_account: "Vous avez déjà un compte ?"
       log_in_link: "Connectez-vous"
+      edit_title: "Mon profil — BeachCamp"
+      edit_heading: "Mon profil"
+      edit_subtitle: "Mettez à jour vos informations personnelles"
+      section_identity: "Informations personnelles"
+      section_photo: "Photo de profil"
+      section_sport: "Profil sportif"
+      section_security: "Sécurité du compte"
+      date_of_birth: "Date de naissance"
+      phone: "Téléphone"
+      avatar: "Photo (JPG, PNG — max 5 Mo)"
+      photo_current: "Photo actuelle — téléchargez-en une nouvelle pour la remplacer"
+      bio_coach: "Palmarès & expérience"
+      bio_player: "À propos de moi"
+      bio_coach_placeholder: "Décrivez votre palmarès, vos certifications, votre expérience d'entraîneur..."
+      bio_player_placeholder: "Parlez de votre pratique du beach-volley, votre club, vos objectifs..."
+      current_password: "Mot de passe actuel"
+      current_password_helper: "Requis pour confirmer les modifications"
+      edit_password_helper: "Laissez vide pour ne pas changer le mot de passe"
+      update: "Enregistrer les modifications"
+      danger_zone: "Zone de danger"
+      cancel_account: "Supprimer mon compte"
+      cancel_confirm: "Êtes-vous sûr ? Cette action est irréversible."
+
+  admin:
+    unauthorized: "Accès réservé aux administrateurs."
+    users:
+      update:
+        success: "Utilisateur mis à jour."
 
   services:
     camps:

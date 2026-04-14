@@ -105,26 +105,26 @@
         <div>
           <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400); margin-bottom:var(--space-3);">Primary</div>
           <div class="flex flex-wrap gap-3">
-            <%= render Ui::ButtonComponent.new(size: "sm") { "Small" } %>
+            <%= render(Ui::ButtonComponent.new(size: "sm")) { "Small" } %>
             <%= render Ui::ButtonComponent.new { "Default" } %>
-            <%= render Ui::ButtonComponent.new(size: "lg") { "Large" } %>
-            <%= render Ui::ButtonComponent.new(disabled: true) { "Disabled" } %>
+            <%= render(Ui::ButtonComponent.new(size: "lg")) { "Large" } %>
+            <%= render(Ui::ButtonComponent.new(disabled: true)) { "Disabled" } %>
           </div>
         </div>
         <div>
           <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400); margin-bottom:var(--space-3);">Outline</div>
           <div class="flex flex-wrap gap-3">
-            <%= render Ui::ButtonComponent.new(variant: "outline", size: "sm") { "Small" } %>
-            <%= render Ui::ButtonComponent.new(variant: "outline") { "Default" } %>
-            <%= render Ui::ButtonComponent.new(variant: "outline", size: "lg") { "Large" } %>
+            <%= render(Ui::ButtonComponent.new(variant: "outline", size: "sm")) { "Small" } %>
+            <%= render(Ui::ButtonComponent.new(variant: "outline")) { "Default" } %>
+            <%= render(Ui::ButtonComponent.new(variant: "outline", size: "lg")) { "Large" } %>
           </div>
         </div>
         <div>
           <div class="font-mono" style="font-size:var(--fs-xs); color:var(--neutral-400); margin-bottom:var(--space-3);">Ghost</div>
           <div class="flex flex-wrap gap-3">
-            <%= render Ui::ButtonComponent.new(variant: "ghost", size: "sm") { "Small" } %>
-            <%= render Ui::ButtonComponent.new(variant: "ghost") { "Default" } %>
-            <%= render Ui::ButtonComponent.new(variant: "ghost", size: "lg") { "Large" } %>
+            <%= render(Ui::ButtonComponent.new(variant: "ghost", size: "sm")) { "Small" } %>
+            <%= render(Ui::ButtonComponent.new(variant: "ghost")) { "Default" } %>
+            <%= render(Ui::ButtonComponent.new(variant: "ghost", size: "lg")) { "Large" } %>
           </div>
         </div>
       </div>

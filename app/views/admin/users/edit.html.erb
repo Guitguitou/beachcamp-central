@@ -1,0 +1,107 @@
+<% content_for(:title, "Modifier #{@user.full_name} — Admin BeachCamp") %>
+
+<div class="flex items-center gap-3 mb-6">
+  <%= link_to "← Utilisateurs", admin_users_path, class: "ds-btn ds-btn--outline ds-btn--sm" %>
+  <div>
+    <h1 class="mb-0"><%= @user.full_name %></h1>
+    <p class="text-muted" style="font-size:var(--fs-sm);"><%= @user.email %></p>
+  </div>
+</div>
+
+<%= form_with model: [:admin, @user], local: true, html: { enctype: "multipart/form-data" } do |f| %>
+  <%= render "devise/shared/error_messages", resource: @user %>
+
+  <%# Identité %>
+  <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+    <h3 class="mb-6">Informations personnelles</h3>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :first_name, label: "Prénom", form: f, required: true) %>
+      <%= render Ui::InputComponent.new(name: :last_name, label: "Nom", form: f, required: true) %>
+    </div>
+    <%= render Ui::InputComponent.new(name: :email, label: "Email", type: "email", form: f, required: true) %>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :date_of_birth, label: "Date de naissance", type: "date", form: f) %>
+      <%= render Ui::InputComponent.new(name: :phone, label: "Téléphone", form: f) %>
+    </div>
+  <% end %>
+
+  <%# Photo %>
+  <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+    <h3 class="mb-6">Photo de profil</h3>
+    <% if @user.avatar.attached? %>
+      <div class="flex items-center gap-4 mb-4">
+        <%= image_tag @user.avatar.variant(resize_to_fill: [64, 64]),
+          style: "width:64px;height:64px;border-radius:50%;object-fit:cover;" %>
+        <p style="font-size:var(--fs-sm); color:var(--neutral-500);">Photo actuelle</p>
+      </div>
+    <% end %>
+    <div class="form-group">
+      <label class="form-label">Nouvelle photo</label>
+      <%= f.file_field :avatar, class: "form-input", accept: "image/*" %>
+    </div>
+  <% end %>
+
+  <%# Rôles & niveau %>
+  <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+    <h3 class="mb-2">Rôles</h3>
+    <p class="text-muted mb-6" style="font-size:var(--fs-sm);">Tout utilisateur est joueur par défaut. Cochez les rôles supplémentaires.</p>
+
+    <div style="display:flex; flex-direction:column; gap:var(--space-3); margin-bottom:var(--space-6);">
+      <label style="display:flex; align-items:center; gap:var(--space-3); padding:var(--space-4); border:1px solid var(--neutral-200); border-radius:var(--radius-md); cursor:default; background:var(--neutral-50);">
+        <input type="checkbox" checked disabled style="width:1rem;height:1rem;">
+        <div>
+          <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);">🏐 Joueur</div>
+          <div style="font-size:var(--fs-xs); color:var(--neutral-500);">Peut s'inscrire aux camps — toujours actif</div>
+        </div>
+      </label>
+
+      <label style="display:flex; align-items:center; gap:var(--space-3); padding:var(--space-4); border:1px solid var(--neutral-200); border-radius:var(--radius-md); cursor:pointer;">
+        <%= f.check_box :organizer, style: "width:1rem;height:1rem;" %>
+        <div>
+          <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);">📋 Organisateur</div>
+          <div style="font-size:var(--fs-xs); color:var(--neutral-500);">Peut créer et gérer des camps</div>
+        </div>
+      </label>
+
+      <label style="display:flex; align-items:center; gap:var(--space-3); padding:var(--space-4); border:1px solid var(--neutral-200); border-radius:var(--radius-md); cursor:pointer;">
+        <%= f.check_box :coach, style: "width:1rem;height:1rem;" %>
+        <div>
+          <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);">🎽 Coach</div>
+          <div style="font-size:var(--fs-xs); color:var(--neutral-500);">Peut être assigné à un camp et valider les inscriptions</div>
+        </div>
+      </label>
+
+      <label style="display:flex; align-items:center; gap:var(--space-3); padding:var(--space-4); border:1px solid var(--error-200); border-radius:var(--radius-md); cursor:pointer; background:var(--neutral-50);">
+        <%= f.check_box :admin, style: "width:1rem;height:1rem;" %>
+        <div>
+          <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm); color:var(--error-700);">⚙️ Administrateur</div>
+          <div style="font-size:var(--fs-xs); color:var(--neutral-500);">Accès total à la plateforme — à accorder avec précaution</div>
+        </div>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Niveau</label>
+      <%= f.select :level, User.levels.keys.map { |l| [l.humanize, l] }, {}, class: "form-input" %>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Bio / Palmarès</label>
+      <%= f.text_area :bio, class: "form-input", rows: 5 %>
+    </div>
+  <% end %>
+
+  <%# Mot de passe (optionnel) %>
+  <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+    <h3 class="mb-2">Changer le mot de passe</h3>
+    <p class="text-muted mb-6" style="font-size:var(--fs-sm);">Laissez vide pour conserver le mot de passe actuel.</p>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :password, label: "Nouveau mot de passe", type: "password", form: f) %>
+      <%= render Ui::InputComponent.new(name: :password_confirmation, label: "Confirmation", type: "password", form: f) %>
+    </div>
+  <% end %>
+
+  <div class="flex gap-3">
+    <%= f.submit "Enregistrer", class: "ds-btn ds-btn--primary ds-btn--lg" %>
+    <%= link_to "Annuler", admin_users_path, class: "ds-btn ds-btn--outline ds-btn--md" %>
+  </div>
+<% end %>

@@ -17,9 +17,21 @@ Rails.application.routes.draw do
       end
     end
 
+    namespace :coach do
+      get "dashboard", to: "dashboard#show"
+      resources :camps, only: [:index, :show] do
+        resources :registrations, only: [:index, :update], controller: "camp_registrations"
+      end
+    end
+
     namespace :player do
       get "dashboard", to: "dashboard#show"
       resources :registrations, only: [:index, :destroy]
+    end
+
+    namespace :admin do
+      get "dashboard", to: "dashboard#show"
+      resources :users, only: [:index, :edit, :update]
     end
 
     namespace :organizer do

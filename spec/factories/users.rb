@@ -4,15 +4,25 @@ FactoryBot.define do
     last_name  { Faker::Name.last_name }
     email      { Faker::Internet.unique.email }
     password   { "password123" }
-    role       { :player }
+    # No role column — everyone is a player by default
+    # Boolean flags default to false
     level      { :beginner }
 
     trait :organizer do
-      role { :organizer }
+      organizer { true }
+    end
+
+    trait :coach do
+      coach { true }
     end
 
     trait :admin do
-      role { :admin }
+      admin { true }
+    end
+
+    trait :organizer_and_coach do
+      organizer { true }
+      coach     { true }
     end
 
     trait :intermediate do

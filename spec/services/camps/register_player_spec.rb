@@ -6,13 +6,13 @@ RSpec.describe Camps::RegisterPlayer, type: :service do
 
   describe "#call" do
     context "when camp is published and has spots" do
-      it "creates a confirmed registration" do
+      it "creates a pending registration" do
         camp = create(:camp, :published, organizer: organizer, max_participants: 10)
         result = described_class.new(camp: camp, user: player).call
 
         expect(result.success?).to be true
         expect(result.registration).to be_persisted
-        expect(result.registration.status).to eq("confirmed")
+        expect(result.registration.status).to eq("pending")
       end
     end
 
@@ -51,12 +51,14 @@ RSpec.describe Camps::RegisterPlayer, type: :service do
     end
 
     context "when registration fills the last spot" do
-      it "marks the camp as full" do
+      it "creates a pending registration without marking the camp as full (coach confirms later)" do
         camp = create(:camp, :published, organizer: organizer, min_participants: 1, max_participants: 1)
         result = described_class.new(camp: camp, user: player).call
 
         expect(result.success?).to be true
-        expect(camp.reload.status).to eq("full")
+        expect(result.registration.status).to eq("pending")
+        # Camp stays published — the coach's confirmation triggers full? check
+        expect(camp.reload.status).to eq("published")
       end
     end
   end

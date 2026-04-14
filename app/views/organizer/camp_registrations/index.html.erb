@@ -25,7 +25,7 @@
           <td><%= render Beachcamp::LevelBadgeComponent.new(level: reg.user.level) %></td>
           <td>
             <% color = case reg.status; when "confirmed" then "success"; when "pending" then "warning"; else "danger"; end %>
-            <%= render Ui::BadgeComponent.new(color: color) { reg.status.humanize } %>
+            <%= render(Ui::BadgeComponent.new(color: color)) { reg.status.humanize } %>
           </td>
           <td><%= reg.created_at.strftime("%b %d, %Y") %></td>
           <td>

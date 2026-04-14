@@ -22,7 +22,7 @@
         <div class="ds-empty__icon"><%= t("player.dashboard.show.empty_icon") %></div>
         <div class="ds-empty__title"><%= t("player.dashboard.show.empty_title") %></div>
         <p class="ds-empty__text"><%= t("player.dashboard.show.empty_text") %></p>
-        <%= render Ui::ButtonComponent.new(href: camps_path) { t("player.dashboard.show.explore") } %>
+        <%= render(Ui::ButtonComponent.new(href: camps_path)) { t("player.dashboard.show.explore") } %>
       </div>
     <% end %>
   </section>

@@ -3,32 +3,48 @@ puts "Seeding BeachCamp..."
 organizer1 = User.create!(
   first_name: "Maria", last_name: "Santos",
   email: "maria@beachcamp.com", password: "password123",
-  role: :organizer, level: :pro
+  organizer: true, level: :pro
 )
 
 organizer2 = User.create!(
   first_name: "Lucas", last_name: "Weber",
   email: "lucas@beachcamp.com", password: "password123",
-  role: :organizer, level: :international
+  organizer: true, level: :international
+)
+
+# Coach who is also a player (no organizer flag)
+coach1 = User.create!(
+  first_name: "Julien", last_name: "Moreau",
+  email: "julien@beachcamp.com", password: "password123",
+  coach: true, level: :pro,
+  bio: "Champion de France de beach-volley 2018-2021. Entraîneur certifié FIVB niveau 2. Spécialiste défense et lecture du jeu."
+)
+
+# Organizer who is also a coach
+organizer_coach = User.create!(
+  first_name: "Sara", last_name: "Belmonte",
+  email: "sara@beachcamp.com", password: "password123",
+  organizer: true, coach: true, level: :international,
+  bio: "Joueuse internationale, organisatrice et coach. 10 ans d'expérience sur le circuit Pro Beach Tour."
 )
 
 players = [
-  { first_name: "Alex", last_name: "Johnson", email: "alex@example.com", level: :beginner },
-  { first_name: "Sophie", last_name: "Martin", email: "sophie@example.com", level: :intermediate },
+  { first_name: "Alex",   last_name: "Johnson",   email: "alex@example.com",   level: :beginner },
+  { first_name: "Sophie", last_name: "Martin",    email: "sophie@example.com", level: :intermediate },
   { first_name: "Carlos", last_name: "Rodriguez", email: "carlos@example.com", level: :advanced },
-  { first_name: "Emma", last_name: "Thompson", email: "emma@example.com", level: :pro },
-  { first_name: "Kenji", last_name: "Tanaka", email: "kenji@example.com", level: :intermediate },
-  { first_name: "Lucia", last_name: "Rossi", email: "lucia@example.com", level: :beginner },
-  { first_name: "Pierre", last_name: "Dupont", email: "pierre@example.com", level: :advanced },
-  { first_name: "Anna", last_name: "Novak", email: "anna@example.com", level: :pro }
+  { first_name: "Emma",   last_name: "Thompson",  email: "emma@example.com",   level: :pro },
+  { first_name: "Kenji",  last_name: "Tanaka",    email: "kenji@example.com",  level: :intermediate },
+  { first_name: "Lucia",  last_name: "Rossi",     email: "lucia@example.com",  level: :beginner },
+  { first_name: "Pierre", last_name: "Dupont",    email: "pierre@example.com", level: :advanced },
+  { first_name: "Anna",   last_name: "Novak",     email: "anna@example.com",   level: :pro }
 ].map do |attrs|
-  User.create!(attrs.merge(password: "password123", role: :player))
+  User.create!(attrs.merge(password: "password123"))
 end
 
 admin = User.create!(
   first_name: "Admin", last_name: "BeachCamp",
   email: "admin@beachcamp.com", password: "password123",
-  role: :admin, level: :international
+  admin: true, level: :international
 )
 
 camps_data = [
@@ -115,8 +131,10 @@ end
 
 puts "Seeded: #{User.count} users, #{Camp.count} camps, #{Registration.count} registrations, #{Conversation.count} conversations, #{Message.count} messages"
 puts ""
-puts "Login credentials:"
-puts "  Organizer: maria@beachcamp.com / password123"
-puts "  Organizer: lucas@beachcamp.com / password123"
-puts "  Player:    alex@example.com / password123"
-puts "  Admin:     admin@beachcamp.com / password123"
+puts "Login credentials (password: password123):"
+puts "  Organizer:          maria@beachcamp.com"
+puts "  Organizer:          lucas@beachcamp.com"
+puts "  Coach:              julien@beachcamp.com"
+puts "  Organizer + Coach:  sara@beachcamp.com"
+puts "  Player:             alex@example.com"
+puts "  Admin:              admin@beachcamp.com"

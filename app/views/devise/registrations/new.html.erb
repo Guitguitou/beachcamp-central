@@ -20,18 +20,6 @@
         <%= render Ui::InputComponent.new(name: :password_confirmation, label: t("devise_custom.registrations.confirm_password"), type: "password", form: f, required: true, placeholder: t("devise_custom.registrations.password_placeholder")) %>
 
         <div class="form-group">
-          <label class="form-label"><%= t("devise_custom.registrations.role_label") %></label>
-          <div class="flex gap-3">
-            <label style="flex:1; display:flex; align-items:center; gap:var(--space-2); padding:var(--space-3) var(--space-4); border:1px solid var(--neutral-200); border-radius:var(--radius-md); cursor:pointer; font-size:var(--fs-sm);">
-              <%= f.radio_button :role, "player", checked: true %> 🏐 <%= t("devise_custom.registrations.role_player") %>
-            </label>
-            <label style="flex:1; display:flex; align-items:center; gap:var(--space-2); padding:var(--space-3) var(--space-4); border:1px solid var(--neutral-200); border-radius:var(--radius-md); cursor:pointer; font-size:var(--fs-sm);">
-              <%= f.radio_button :role, "organizer" %> 📋 <%= t("devise_custom.registrations.role_organizer") %>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
           <label class="form-label"><%= t("devise_custom.registrations.level_label") %></label>
           <%= f.select :level, User.levels.keys.map { |l| [l.humanize, l] }, {}, class: "form-input" %>
         </div>

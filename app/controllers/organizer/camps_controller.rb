@@ -79,7 +79,7 @@ module Organizer
         :start_date, :end_date, :level,
         :price_cents, :currency,
         :min_participants, :max_participants,
-        :featured, :poster
+        :featured, :poster, :coach_id
       )
     end
   end

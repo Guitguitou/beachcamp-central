@@ -1,5 +1,6 @@
 class Camp < ApplicationRecord
   belongs_to :organizer, class_name: "User", inverse_of: :organized_camps
+  belongs_to :coach, class_name: "User", optional: true, inverse_of: :coached_camps
 
   has_many :registrations, dependent: :destroy
   has_many :registered_users, through: :registrations, source: :user

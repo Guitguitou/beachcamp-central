@@ -2,7 +2,7 @@
 
 <div class="flex items-center justify-between mb-8">
   <h1><%= t("organizer.camps.index.heading") %></h1>
-  <%= render Ui::ButtonComponent.new(href: new_organizer_camp_path, size: "sm") { t("organizer.camps.index.create_camp") } %>
+  <%= render(Ui::ButtonComponent.new(href: new_organizer_camp_path, size: "sm")) { t("organizer.camps.index.create_camp") } %>
 </div>
 
 <% if @camps.any? %>
@@ -12,7 +12,7 @@
         <a href="<%= organizer_camp_path(camp) %>" style="text-decoration:none; color:inherit; display:block;">
           <div class="flex items-center justify-between mb-3">
             <%= render Beachcamp::LevelBadgeComponent.new(level: camp.level) %>
-            <%= render Ui::BadgeComponent.new(color: camp_status_color(camp)) { camp.status.humanize } %>
+            <%= render(Ui::BadgeComponent.new(color: camp_status_color(camp))) { camp.status.humanize } %>
           </div>
           <h3 style="font-size:1.125rem; font-weight:var(--fw-bold); margin-bottom:var(--space-1);"><%= camp.title %></h3>
           <p style="font-size:var(--fs-sm); color:var(--neutral-500); margin-bottom:var(--space-3);">
@@ -31,6 +31,6 @@
     <div class="ds-empty__icon"><%= t("organizer.camps.index.empty_icon") %></div>
     <div class="ds-empty__title"><%= t("organizer.camps.index.empty_title") %></div>
     <p class="ds-empty__text"><%= t("organizer.camps.index.empty_text") %></p>
-    <%= render Ui::ButtonComponent.new(href: new_organizer_camp_path) { t("organizer.camps.index.create_camp") } %>
+    <%= render(Ui::ButtonComponent.new(href: new_organizer_camp_path)) { t("organizer.camps.index.create_camp") } %>
   </div>
 <% end %>
