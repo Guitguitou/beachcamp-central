@@ -1,11 +1,11 @@
-<% content_for(:title, "Modifier #{@user.full_name} — Admin BeachCamp") %>
-<% content_for(:breadcrumb) { (link_to("Utilisateurs", admin_users_path) + " / #{@user.full_name}").html_safe } %>
+<% content_for(:title, "Créer un utilisateur — Admin BeachCamp") %>
+<% content_for(:breadcrumb) { link_to("Utilisateurs", admin_users_path) + " / Créer".html_safe } %>
 
 <div class="flex items-center gap-3 mb-6">
   <%= link_to "← Utilisateurs", admin_users_path, class: "ds-btn ds-btn--outline ds-btn--sm" %>
   <div>
-    <h1 class="mb-0"><%= @user.full_name %></h1>
-    <p class="text-muted" style="font-size:var(--fs-sm);"><%= @user.email %></p>
+    <h1 class="mb-0">Créer un utilisateur</h1>
+    <p class="text-muted" style="font-size:var(--fs-sm);">Joueur, coach, organisateur ou admin</p>
   </div>
 </div>
 
@@ -23,22 +23,6 @@
     <div class="grid grid-cols-2 gap-4">
       <%= render Ui::InputComponent.new(name: :date_of_birth, label: "Date de naissance", type: "date", form: f) %>
       <%= render Ui::InputComponent.new(name: :phone, label: "Téléphone", form: f) %>
-    </div>
-  <% end %>
-
-  <%# Photo %>
-  <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
-    <h3 class="mb-6">Photo de profil</h3>
-    <% if @user.avatar.attached? %>
-      <div class="flex items-center gap-4 mb-4">
-        <%= image_tag @user.avatar.variant(resize_to_fill: [64, 64]),
-          style: "width:64px;height:64px;border-radius:50%;object-fit:cover;" %>
-        <p style="font-size:var(--fs-sm); color:var(--neutral-500);">Photo actuelle</p>
-      </div>
-    <% end %>
-    <div class="form-group">
-      <label class="form-label">Nouvelle photo</label>
-      <%= f.file_field :avatar, class: "form-input", accept: "image/*" %>
     </div>
   <% end %>
 
@@ -87,22 +71,21 @@
     </div>
     <div class="form-group">
       <label class="form-label">Bio / Palmarès</label>
-      <%= f.text_area :bio, class: "form-input", rows: 5 %>
+      <%= f.text_area :bio, class: "form-input", rows: 4 %>
     </div>
   <% end %>
 
-  <%# Mot de passe (optionnel) %>
+  <%# Mot de passe %>
   <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
-    <h3 class="mb-2">Changer le mot de passe</h3>
-    <p class="text-muted mb-6" style="font-size:var(--fs-sm);">Laissez vide pour conserver le mot de passe actuel.</p>
+    <h3 class="mb-2">Mot de passe</h3>
     <div class="grid grid-cols-2 gap-4">
-      <%= render Ui::InputComponent.new(name: :password, label: "Nouveau mot de passe", type: "password", form: f) %>
-      <%= render Ui::InputComponent.new(name: :password_confirmation, label: "Confirmation", type: "password", form: f) %>
+      <%= render Ui::InputComponent.new(name: :password, label: "Mot de passe", type: "password", form: f, required: true) %>
+      <%= render Ui::InputComponent.new(name: :password_confirmation, label: "Confirmation", type: "password", form: f, required: true) %>
     </div>
   <% end %>
 
   <div class="flex gap-3">
-    <%= f.submit "Enregistrer", class: "ds-btn ds-btn--primary ds-btn--lg" %>
+    <%= f.submit "Créer l'utilisateur", class: "ds-btn ds-btn--primary ds-btn--lg" %>
     <%= link_to "Annuler", admin_users_path, class: "ds-btn ds-btn--outline ds-btn--md" %>
   </div>
 <% end %>

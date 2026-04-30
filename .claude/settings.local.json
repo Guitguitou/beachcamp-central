@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs ls *)",
+      "Bash(bundle exec *)",
+      "Bash(ruby -c /Users/guillaumeimary/code/Guitguitou/Mybeachcamp/app/controllers/admin/camps_controller.rb)",
+      "Bash(ruby -c /Users/guillaumeimary/code/Guitguitou/Mybeachcamp/app/controllers/admin/camp_registrations_controller.rb)",
+      "Bash(ruby -c /Users/guillaumeimary/code/Guitguitou/Mybeachcamp/app/controllers/admin/users_controller.rb)"
+    ]
+  }
+}

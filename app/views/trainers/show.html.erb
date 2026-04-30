@@ -1,0 +1,71 @@
+<% content_for(:title, "#{@coach.full_name} — #{t('layouts.application.title')}") %>
+
+<%= render Layout::PublicNavbarComponent.new(current_user: current_user) %>
+
+<main class="container py-12">
+  <div style="display:grid; grid-template-columns:1fr; gap:var(--space-8); max-width:900px; margin:0 auto;">
+    <div class="flex items-start gap-6 flex-wrap">
+      <div style="width:7rem; height:7rem; border-radius:var(--radius-xl); overflow:hidden; background:var(--neutral-200); flex-shrink:0;">
+        <% if @coach.avatar.attached? %>
+          <%= image_tag url_for(@coach.avatar), alt: @coach.full_name, style: "width:100%; height:100%; object-fit:cover;" %>
+        <% else %>
+          <div style="width:100%; height:100%; background:var(--gradient-sunset); display:flex; align-items:center; justify-content:center; color:white; font-size:var(--fs-h2); font-weight:var(--fw-extrabold);">
+            <%= @coach.first_name[0] %><%= @coach.last_name[0] %>
+          </div>
+        <% end %>
+      </div>
+      <div>
+        <h1 class="mb-2"><%= @coach.full_name %></h1>
+        <% if @coach.coach_headline.present? %>
+          <p class="text-muted mb-0" style="font-size:var(--fs-body); font-weight:var(--fw-semibold);"><%= @coach.coach_headline %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @coach.coach_bio.present? %>
+      <%= render Ui::CardComponent.new(padding: "p-6") do %>
+        <h3 class="mb-4"><%= t("trainers.show.about") %></h3>
+        <div style="color:var(--neutral-600); line-height:var(--lh-relaxed);"><%= simple_format(@coach.coach_bio) %></div>
+      <% end %>
+    <% end %>
+
+    <% if @coach.coach_track_record.present? %>
+      <%= render Ui::CardComponent.new(padding: "p-6") do %>
+        <h3 class="mb-4"><%= t("trainers.show.track_record") %></h3>
+        <div style="color:var(--neutral-600); line-height:var(--lh-relaxed); white-space:pre-wrap;"><%= @coach.coach_track_record %></div>
+      <% end %>
+    <% end %>
+
+    <% if @upcoming_camps.any? %>
+      <div>
+        <h2 class="mb-4" style="font-size:var(--fs-h3);"><%= t("trainers.show.upcoming_camps") %></h2>
+        <div style="display:grid; gap:var(--space-4);">
+          <% @upcoming_camps.each do |camp| %>
+            <%= link_to camp_path(camp), class: "ds-camp-card-link", style: "text-decoration:none; color:inherit;" do %>
+              <%= render Ui::CardComponent.new(padding: "p-4") do %>
+                <div class="flex items-center justify-between gap-4 flex-wrap">
+                  <div>
+                    <div style="font-weight:var(--fw-bold);"><%= camp.title %></div>
+                    <div class="text-muted" style="font-size:var(--fs-sm);">📍 <%= camp.location %> · <%= I18n.l(camp.start_date, format: :short) %> – <%= I18n.l(camp.end_date, format: :short) %></div>
+                  </div>
+                  <%= render Beachcamp::LevelBadgeComponent.new(level: camp.level) %>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @past_camps.any? %>
+      <div>
+        <h2 class="mb-4" style="font-size:var(--fs-h3);"><%= t("trainers.show.past_camps") %></h2>
+        <ul class="text-muted" style="font-size:var(--fs-sm); line-height:1.8;">
+          <% @past_camps.each do |camp| %>
+            <li><%= link_to camp.title, camp_path(camp), style: "color:var(--ocean-600);" %> — <%= camp.location %> (<%= camp.start_date.year %>)</li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</main>

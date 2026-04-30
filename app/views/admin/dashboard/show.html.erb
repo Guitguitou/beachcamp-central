@@ -1,26 +1,115 @@
 <% content_for(:title, "Dashboard Admin — BeachCamp") %>
+<% content_for(:breadcrumb) { "Dashboard" } %>
 
-<h1 class="mb-2">Administration</h1>
-<p class="text-muted mb-8">Vue d'ensemble de la plateforme</p>
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="mb-1">Vue d'ensemble</h1>
+    <p class="text-muted">Bienvenue, <%= current_user.first_name %> — voici l'état de la plateforme.</p>
+  </div>
+  <div class="flex gap-3">
+    <%= link_to new_admin_camp_path, class: "ds-btn ds-btn--primary ds-btn--md" do %>
+      + Nouveau camp
+    <% end %>
+    <%= link_to new_admin_user_path, class: "ds-btn ds-btn--outline ds-btn--md" do %>
+      + Nouvel utilisateur
+    <% end %>
+  </div>
+</div>
 
-<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+<%# Stats utilisateurs %>
+<div style="margin-bottom: var(--space-2); font-size: var(--fs-xs); font-weight: var(--fw-semibold); text-transform: uppercase; letter-spacing: 0.08em; color: var(--neutral-500);">Utilisateurs</div>
+<div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin-bottom: var(--space-6);">
   <% [
-    { label: "Utilisateurs total", value: @total_users, icon: "👥" },
-    { label: "Joueurs", value: @players_count, icon: "🏐" },
-    { label: "Coachs", value: @coaches_count, icon: "🎽" },
-    { label: "Organisateurs", value: @organizers_count, icon: "📋" },
-    { label: "Camps total", value: @total_camps, icon: "🏕️" },
-    { label: "Camps publiés", value: @published_camps, icon: "✅" }
-  ].each do |stat| %>
-    <%= render Ui::CardComponent.new(padding: "p-6") do %>
-      <div style="font-size:1.5rem; margin-bottom:var(--space-2);"><%= stat[:icon] %></div>
-      <div class="ds-stat-card__value" style="font-size:var(--fs-h3);"><%= stat[:value] %></div>
-      <div class="ds-stat-card__label"><%= stat[:label] %></div>
+    { label: "Total utilisateurs", value: @total_users, icon: "👥", color: "var(--ocean-600)", bg: "var(--ocean-50)", link: admin_users_path },
+    { label: "Joueurs", value: @players_count, icon: "🏐", color: "var(--neutral-700)", bg: "var(--neutral-50)", link: admin_users_path },
+    { label: "Coachs", value: @coaches_count, icon: "🎽", color: "var(--growth-700)", bg: "var(--growth-50)", link: admin_users_path(role: "coach") },
+    { label: "Organisateurs", value: @organizers_count, icon: "📋", color: "var(--sand-700)", bg: "var(--sand-50)", link: admin_users_path(role: "organizer") },
+  ].each do |s| %>
+    <%= link_to s[:link], style: "text-decoration:none;" do %>
+      <%= render Ui::CardComponent.new(padding: "p-5") do %>
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom: var(--space-3);">
+          <div style="width:40px;height:40px;background:#{s[:bg]};border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">
+            <%= s[:icon] %>
+          </div>
+        </div>
+        <div style="font-size:1.75rem;font-weight:var(--fw-extrabold);color:#{s[:color]};line-height:1;margin-bottom:4px;"><%= s[:value] %></div>
+        <div style="font-size:var(--fs-xs);color:var(--neutral-500);font-weight:var(--fw-medium);"><%= s[:label] %></div>
+      <% end %>
     <% end %>
   <% end %>
 </div>
 
-<div class="flex gap-3">
-  <%= link_to "Gérer les utilisateurs", admin_users_path, class: "ds-btn ds-btn--primary ds-btn--md" %>
-  <%= link_to "Gérer les camps", organizer_camps_path, class: "ds-btn ds-btn--outline ds-btn--md" %>
+<%# Stats camps %>
+<div style="margin-bottom: var(--space-2); font-size: var(--fs-xs); font-weight: var(--fw-semibold); text-transform: uppercase; letter-spacing: 0.08em; color: var(--neutral-500);">Camps</div>
+<div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin-bottom: var(--space-8);">
+  <% [
+    { label: "Total camps", value: @total_camps, icon: "🏕️", color: "var(--neutral-700)", bg: "var(--neutral-100)", link: admin_camps_path },
+    { label: "Publiés", value: @published_camps, icon: "✅", color: "var(--growth-700)", bg: "var(--growth-50)", link: admin_camps_path(status: "published") },
+    { label: "Brouillons", value: @draft_camps, icon: "📝", color: "var(--ocean-700)", bg: "var(--ocean-50)", link: admin_camps_path(status: "draft") },
+    { label: "Annulés", value: @cancelled_camps, icon: "❌", color: "var(--error-700)", bg: "var(--error-50)", link: admin_camps_path(status: "cancelled") },
+  ].each do |s| %>
+    <%= link_to s[:link], style: "text-decoration:none;" do %>
+      <%= render Ui::CardComponent.new(padding: "p-5") do %>
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom: var(--space-3);">
+          <div style="width:40px;height:40px;background:#{s[:bg]};border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">
+            <%= s[:icon] %>
+          </div>
+        </div>
+        <div style="font-size:1.75rem;font-weight:var(--fw-extrabold);color:#{s[:color]};line-height:1;margin-bottom:4px;"><%= s[:value] %></div>
+        <div style="font-size:var(--fs-xs);color:var(--neutral-500);font-weight:var(--fw-medium);"><%= s[:label] %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<%# Inscriptions + activité récente %>
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: start;">
+
+  <%# Inscriptions summary %>
+  <%= render Ui::CardComponent.new(padding: "p-6") do %>
+    <div class="flex items-center justify-between mb-4">
+      <h3 style="font-size:var(--fs-base); font-weight:var(--fw-bold);">Inscriptions</h3>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:var(--space-3);">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:var(--space-3); background:var(--neutral-50); border-radius:var(--radius-md);">
+        <span style="font-size:var(--fs-sm); color:var(--neutral-600);">Total</span>
+        <span style="font-weight:var(--fw-bold); font-size:var(--fs-lg);"><%= @total_registrations %></span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:var(--space-3); background:var(--sunset-50); border-radius:var(--radius-md);">
+        <span style="font-size:var(--fs-sm); color:var(--sunset-700);">En attente</span>
+        <span style="font-weight:var(--fw-bold); font-size:var(--fs-lg); color:var(--sunset-700);"><%= @pending_registrations %></span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:var(--space-3); background:var(--growth-50); border-radius:var(--radius-md);">
+        <span style="font-size:var(--fs-sm); color:var(--growth-700);">Confirmées</span>
+        <span style="font-weight:var(--fw-bold); font-size:var(--fs-lg); color:var(--growth-700);"><%= @confirmed_registrations %></span>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Derniers camps %>
+  <%= render Ui::CardComponent.new(padding: "p-6") do %>
+    <div class="flex items-center justify-between mb-4">
+      <h3 style="font-size:var(--fs-base); font-weight:var(--fw-bold);">Derniers camps créés</h3>
+      <%= link_to "Voir tous →", admin_camps_path, style: "font-size:var(--fs-xs); color:var(--ocean-600); text-decoration:none;" %>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:var(--space-2);">
+      <% @recent_camps.each do |camp| %>
+        <%= link_to admin_camp_path(camp), style: "text-decoration:none;" do %>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:var(--space-3); border-radius:var(--radius-md); transition: background 0.1s;" onmouseover="this.style.background='var(--neutral-50)'" onmouseout="this.style.background='transparent'">
+            <div>
+              <div style="font-size:var(--fs-sm); font-weight:var(--fw-semibold); color:var(--neutral-900);"><%= camp.title %></div>
+              <div style="font-size:var(--fs-xs); color:var(--neutral-500);"><%= camp.location %>, <%= camp.country %></div>
+            </div>
+            <% status_colors = { "draft" => ["var(--neutral-100)", "var(--neutral-600)"], "published" => ["var(--growth-100)", "var(--growth-700)"], "full" => ["var(--ocean-100)", "var(--ocean-700)"], "cancelled" => ["var(--error-100)", "var(--error-700)"] }
+               bg, fg = status_colors[camp.status] || ["var(--neutral-100)", "var(--neutral-600)"] %>
+            <span style="font-size:10px; font-weight:var(--fw-semibold); background:<%= bg %>; color:<%= fg %>; padding:2px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.05em;"><%= camp.status %></span>
+          </div>
+        <% end %>
+      <% end %>
+      <% if @recent_camps.empty? %>
+        <p style="font-size:var(--fs-sm); color:var(--neutral-400); text-align:center; padding:var(--space-4);">Aucun camp pour l'instant.</p>
+      <% end %>
+    </div>
+  <% end %>
+
 </div>

@@ -31,7 +31,15 @@ Rails.application.routes.draw do
 
     namespace :admin do
       get "dashboard", to: "dashboard#show"
-      resources :users, only: [:index, :edit, :update]
+      resources :users, only: [:index, :new, :create, :edit, :update, :destroy]
+      resources :camps do
+        member do
+          patch :publish
+          patch :cancel
+          patch :set_draft
+        end
+        resources :registrations, only: [:index, :update], controller: "camp_registrations"
+      end
     end
 
     namespace :organizer do

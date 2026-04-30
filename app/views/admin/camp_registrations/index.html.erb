@@ -1,0 +1,97 @@
+<% content_for(:title, "Inscriptions — #{@camp.title} — Admin") %>
+<% content_for(:breadcrumb) { (link_to("Camps", admin_camps_path) + " / " + link_to(@camp.title, admin_camp_path(@camp)) + " / Inscriptions").html_safe } %>
+
+<div class="flex items-center gap-3 mb-6">
+  <%= link_to "← #{@camp.title}", admin_camp_path(@camp), class: "ds-btn ds-btn--outline ds-btn--sm" %>
+  <div>
+    <h1 class="mb-0">Inscriptions</h1>
+    <p class="text-muted" style="font-size:var(--fs-sm);"><%= @registrations.count %> inscription(s) pour ce camp</p>
+  </div>
+</div>
+
+<%= render Ui::CardComponent.new(padding: "p-0") do %>
+  <div style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:var(--neutral-50); border-bottom:1px solid var(--neutral-200);">
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Participant</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Niveau</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Inscrit le</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Statut</th>
+          <th style="padding:var(--space-3) var(--space-4);"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @registrations.each do |reg| %>
+          <% reg_styles = {
+            "pending"   => { bg: "var(--sunset-100)",  color: "var(--sunset-700)",  label: "En attente" },
+            "confirmed" => { bg: "var(--growth-100)",  color: "var(--growth-700)",  label: "Confirmée" },
+            "cancelled" => { bg: "var(--neutral-100)", color: "var(--neutral-500)", label: "Annulée" },
+          }
+          rs = reg_styles[reg.status] || { bg: "var(--neutral-100)", color: "var(--neutral-500)", label: reg.status } %>
+          <tr style="border-bottom:1px solid var(--neutral-100);">
+            <td style="padding:var(--space-3) var(--space-4);">
+              <div class="flex items-center gap-3">
+                <% if reg.user.avatar.attached? %>
+                  <%= image_tag reg.user.avatar.variant(resize_to_fill: [32, 32]),
+                    style: "width:32px;height:32px;border-radius:50%;object-fit:cover;" %>
+                <% else %>
+                  <div style="width:32px;height:32px;background:var(--gradient-ocean);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:var(--fw-bold);">
+                    <%= reg.user.first_name[0] %><%= reg.user.last_name[0] %>
+                  </div>
+                <% end %>
+                <div>
+                  <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);"><%= reg.user.full_name %></div>
+                  <div style="font-size:var(--fs-xs); color:var(--neutral-500);"><%= reg.user.email %></div>
+                </div>
+              </div>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-sm); color:var(--neutral-600);">
+              <%= reg.user.level.humanize %>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-xs); color:var(--neutral-500);">
+              <%= I18n.l(reg.created_at.to_date, format: :short) %>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4);">
+              <span style="font-size:10px; font-weight:var(--fw-semibold); background:<%= rs[:bg] %>; color:<%= rs[:color] %>; padding:3px 10px; border-radius:999px; text-transform:uppercase; letter-spacing:0.05em;">
+                <%= rs[:label] %>
+              </span>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); text-align:right;">
+              <div class="flex gap-2" style="justify-content:flex-end; align-items:center;">
+                <% unless reg.confirmed? %>
+                  <%= button_to "Confirmer",
+                    admin_camp_registration_path(@camp, reg),
+                    params: { registration: { status: "confirmed" } },
+                    method: :patch,
+                    class: "ds-btn ds-btn--sm",
+                    style: "background:var(--growth-600);color:white;border-color:var(--growth-600);" %>
+                <% end %>
+                <% unless reg.cancelled? %>
+                  <%= button_to "Annuler",
+                    admin_camp_registration_path(@camp, reg),
+                    params: { registration: { status: "cancelled" } },
+                    method: :patch,
+                    class: "ds-btn ds-btn--sm",
+                    style: "background:var(--error-50);color:var(--error-700);border:1px solid var(--error-200);" %>
+                <% end %>
+                <% if reg.cancelled? %>
+                  <%= button_to "Remettre en attente",
+                    admin_camp_registration_path(@camp, reg),
+                    params: { registration: { status: "pending" } },
+                    method: :patch,
+                    class: "ds-btn ds-btn--outline ds-btn--sm" %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        <% if @registrations.empty? %>
+          <tr>
+            <td colspan="5" style="padding:var(--space-8); text-align:center; color:var(--neutral-400);">Aucune inscription pour ce camp.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

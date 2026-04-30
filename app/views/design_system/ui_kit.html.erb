@@ -1,0 +1,109 @@
+<% content_for(:title, "UI Kit — BeachCamp Central") %>
+
+<div class="container py-12">
+  <div class="mb-12">
+    <h1>UI Kit</h1>
+    <p class="text-muted" style="font-size:var(--fs-body);">Reference page for all reusable UI primitives and composed patterns.</p>
+  </div>
+
+  <section class="mb-12">
+    <h2 class="mb-6" style="font-weight:var(--fw-extrabold);">Buttons</h2>
+    <%= render Ui::CardComponent.new(padding: "p-6") do %>
+      <div class="grid grid-cols-1 gap-6">
+        <div>
+          <p class="text-muted mb-3" style="font-size:var(--fs-sm);">Variants</p>
+          <div class="flex flex-wrap gap-3">
+            <%= render Ui::ButtonComponent.new(variant: "primary", size: "sm") do %>Primary<% end %>
+            <%= render Ui::ButtonComponent.new(variant: "outline", size: "sm") do %>Outline<% end %>
+            <%= render Ui::ButtonComponent.new(variant: "ghost", size: "sm") do %>Ghost<% end %>
+            <%= render Ui::ButtonComponent.new(variant: "danger", size: "sm") do %>Danger<% end %>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-muted mb-3" style="font-size:var(--fs-sm);">Sizes</p>
+          <div class="flex flex-wrap gap-3">
+            <%= render Ui::ButtonComponent.new(variant: "primary", size: "sm") do %>Small<% end %>
+            <%= render Ui::ButtonComponent.new(variant: "primary", size: "md") do %>Medium<% end %>
+            <%= render Ui::ButtonComponent.new(variant: "primary", size: "lg") do %>Large<% end %>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-muted mb-3" style="font-size:var(--fs-sm);">States</p>
+          <div class="flex flex-wrap gap-3">
+            <%= render Ui::ButtonComponent.new(variant: "primary", size: "md") do %>Default<% end %>
+            <%= render Ui::ButtonComponent.new(variant: "outline", size: "md", disabled: true) do %>Disabled<% end %>
+            <%= render Ui::ButtonComponent.new(variant: "ghost", size: "md", href: ui_kit_path) do %>As link<% end %>
+            <%= render Ui::ButtonComponent.new(variant: "primary", size: "md", disabled: true) do %>Loading...<% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="mb-6" style="font-weight:var(--fw-extrabold);">Cards & Badges</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <%= render Ui::CardComponent.new(padding: "p-6", hoverable: true) do %>
+        <div class="flex items-center justify-between mb-3">
+          <h3>Hoverable card</h3>
+          <%= render Ui::BadgeComponent.new(color: "ocean") { "Ocean" } %>
+        </div>
+        <p class="text-muted">Reusable container for content blocks, lists and stats.</p>
+      <% end %>
+
+      <%= render Ui::CardComponent.new(padding: "p-6") do %>
+        <h3 class="mb-3">Badge palette</h3>
+        <div class="flex flex-wrap gap-2">
+          <% %w[ocean sunset sand success warning danger info neutral purple].each do |color| %>
+            <%= render Ui::BadgeComponent.new(color: color) { color } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="mb-6" style="font-weight:var(--fw-extrabold);">Inputs</h2>
+    <%= render Ui::CardComponent.new(padding: "p-6") do %>
+      <%= form_with scope: :ui_kit, url: ui_kit_path, method: :get do |f| %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <%= render Ui::InputComponent.new(name: :text, form: f, label: "Text", placeholder: "Type something", helper: "Standard text input") %>
+          <%= render Ui::InputComponent.new(name: :email, form: f, type: "email", label: "Email", placeholder: "you@example.com") %>
+          <%= render Ui::InputComponent.new(name: :password, form: f, type: "password", label: "Password") %>
+          <%= render Ui::InputComponent.new(name: :level, form: f, type: "select", label: "Level", placeholder: "Choose a level", input_html: { options: Camp.levels.keys.map { |l| [l.humanize, l] } }) %>
+        </div>
+        <%= render Ui::InputComponent.new(name: :bio, form: f, type: "textarea", label: "Textarea", placeholder: "Tell us more...", helper: "Supports multi-line text") %>
+        <%= render Ui::InputComponent.new(name: :poster, form: f, type: "file", label: "File upload", helper: "Accepted formats depend on `accept` attribute", input_html: { accept: "image/*" }) %>
+      <% end %>
+    <% end %>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="mb-6" style="font-weight:var(--fw-extrabold);">Composed Components</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <%= render Ui::CardComponent.new(padding: "p-6") do %>
+        <h3 class="mb-4">Level Badge + Spots Indicator</h3>
+        <% sample_camp = Camp.visible.upcoming.first || Camp.new(level: "beginner", max_participants: 16, min_participants: 4, status: "published") %>
+        <div class="flex items-center gap-3 mb-4">
+          <%= render Beachcamp::LevelBadgeComponent.new(level: sample_camp.level || "beginner") %>
+          <%= render Ui::BadgeComponent.new(color: "sunset") { (sample_camp.status || "published").to_s.humanize } %>
+        </div>
+        <%= render Beachcamp::SpotsIndicatorComponent.new(camp: sample_camp) %>
+      <% end %>
+
+      <%= render Ui::CardComponent.new(padding: "p-6") do %>
+        <h3 class="mb-4">Filter Bar</h3>
+        <%= render Beachcamp::FilterBarComponent.new(
+          current_params: {},
+          filters: [
+            { label: "Available", param: :available, value: "1" },
+            { label: "Featured", param: :featured, value: "1" },
+            { label: "Beginner", param: :level, value: "beginner" }
+          ]
+        ) %>
+      <% end %>
+    </div>
+  </section>
+</div>

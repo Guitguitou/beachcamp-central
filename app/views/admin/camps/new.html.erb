@@ -1,0 +1,12 @@
+<% content_for(:title, "Créer un camp — Admin BeachCamp") %>
+<% content_for(:breadcrumb) { (link_to("Camps", admin_camps_path) + " / Créer").html_safe } %>
+
+<div class="flex items-center gap-3 mb-6">
+  <%= link_to "← Camps", admin_camps_path, class: "ds-btn ds-btn--outline ds-btn--sm" %>
+  <div>
+    <h1 class="mb-0">Créer un camp</h1>
+    <p class="text-muted" style="font-size:var(--fs-sm);">Le camp sera créé en brouillon — vous pourrez le publier ensuite.</p>
+  </div>
+</div>
+
+<%= render "form", camp: @camp %>

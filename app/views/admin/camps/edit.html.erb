@@ -1,0 +1,12 @@
+<% content_for(:title, "Modifier #{@camp.title} — Admin BeachCamp") %>
+<% content_for(:breadcrumb) { (link_to("Camps", admin_camps_path) + " / " + link_to(@camp.title, admin_camp_path(@camp)) + " / Modifier").html_safe } %>
+
+<div class="flex items-center gap-3 mb-6">
+  <%= link_to "← #{@camp.title}", admin_camp_path(@camp), class: "ds-btn ds-btn--outline ds-btn--sm" %>
+  <div>
+    <h1 class="mb-0">Modifier le camp</h1>
+    <p class="text-muted" style="font-size:var(--fs-sm);"><%= @camp.location %>, <%= @camp.country %></p>
+  </div>
+</div>
+
+<%= render "form", camp: @camp %>

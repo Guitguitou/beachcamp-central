@@ -1,0 +1,113 @@
+<% content_for(:title, "Camps — Admin BeachCamp") %>
+<% content_for(:breadcrumb) { "Camps" } %>
+
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="mb-1">Camps</h1>
+    <p class="text-muted"><%= @camps.count %> camp(s)</p>
+  </div>
+  <%= link_to new_admin_camp_path, class: "ds-btn ds-btn--primary ds-btn--md" do %>
+    + Créer un camp
+  <% end %>
+</div>
+
+<%# Filtres %>
+<%= form_with url: admin_camps_path, method: :get, local: true do |f| %>
+  <div class="flex gap-3 mb-6" style="flex-wrap:wrap;">
+    <input type="text" name="q" value="<%= params[:q] %>"
+      placeholder="Rechercher par titre, lieu, pays…"
+      class="form-input" style="flex:1; min-width:200px;">
+    <select name="status" class="form-input" style="width:auto;">
+      <option value="">Tous les statuts</option>
+      <option value="draft"      <%= 'selected' if params[:status] == 'draft'      %>>Brouillon</option>
+      <option value="published"  <%= 'selected' if params[:status] == 'published'  %>>Publié</option>
+      <option value="full"       <%= 'selected' if params[:status] == 'full'       %>>Complet</option>
+      <option value="cancelled"  <%= 'selected' if params[:status] == 'cancelled'  %>>Annulé</option>
+    </select>
+    <button type="submit" class="ds-btn ds-btn--primary ds-btn--md">Filtrer</button>
+    <% if params[:q].present? || params[:status].present? %>
+      <%= link_to "Réinitialiser", admin_camps_path, class: "ds-btn ds-btn--outline ds-btn--md" %>
+    <% end %>
+  </div>
+<% end %>
+
+<% status_styles = {
+  "draft"     => { bg: "var(--neutral-100)", color: "var(--neutral-600)", label: "Brouillon" },
+  "published" => { bg: "var(--growth-100)",  color: "var(--growth-700)",  label: "Publié" },
+  "full"      => { bg: "var(--ocean-100)",   color: "var(--ocean-700)",   label: "Complet" },
+  "cancelled" => { bg: "var(--error-100)",   color: "var(--error-700)",   label: "Annulé" },
+} %>
+
+<%= render Ui::CardComponent.new(padding: "p-0") do %>
+  <div style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:var(--neutral-50); border-bottom:1px solid var(--neutral-200);">
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Camp</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Organisateur</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Dates</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Prix</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Places</th>
+          <th style="padding:var(--space-3) var(--space-4); text-align:left; font-size:var(--fs-xs); color:var(--neutral-500); font-weight:var(--fw-semibold); text-transform:uppercase; letter-spacing:0.05em;">Statut</th>
+          <th style="padding:var(--space-3) var(--space-4);"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @camps.each do |camp| %>
+          <% st = status_styles[camp.status] || { bg: "var(--neutral-100)", color: "var(--neutral-600)", label: camp.status } %>
+          <tr style="border-bottom:1px solid var(--neutral-100);">
+            <td style="padding:var(--space-3) var(--space-4);">
+              <div>
+                <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);">
+                  <%= camp.featured? ? "⭐ " : "" %><%= camp.title %>
+                </div>
+                <div style="font-size:var(--fs-xs); color:var(--neutral-500);"><%= camp.location %>, <%= camp.country %></div>
+                <div style="font-size:var(--fs-xs); color:var(--neutral-400);">Niveau : <%= camp.level.humanize %></div>
+              </div>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-sm); color:var(--neutral-700);">
+              <%= camp.organizer.full_name %>
+              <% if camp.coach %>
+                <div style="font-size:var(--fs-xs); color:var(--neutral-400);">Coach : <%= camp.coach.full_name %></div>
+              <% end %>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-sm); color:var(--neutral-600);">
+              <% if camp.start_date && camp.end_date %>
+                <%= I18n.l(camp.start_date, format: :short) %><br>
+                <span style="color:var(--neutral-400);">→ <%= I18n.l(camp.end_date, format: :short) %></span>
+              <% else %>
+                <span style="color:var(--neutral-400);">—</span>
+              <% end %>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-sm); color:var(--neutral-700);">
+              <%= camp.price_display %>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); font-size:var(--fs-sm); color:var(--neutral-600);">
+              <%= camp.registrations.count %> / <%= camp.max_participants %>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4);">
+              <span style="font-size:10px; font-weight:var(--fw-semibold); background:<%= st[:bg] %>; color:<%= st[:color] %>; padding:3px 10px; border-radius:999px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">
+                <%= st[:label] %>
+              </span>
+            </td>
+            <td style="padding:var(--space-3) var(--space-4); text-align:right;">
+              <div class="flex gap-2" style="justify-content:flex-end;">
+                <%= link_to "Voir", admin_camp_path(camp), class: "ds-btn ds-btn--outline ds-btn--sm" %>
+                <%= link_to "Modifier", edit_admin_camp_path(camp), class: "ds-btn ds-btn--outline ds-btn--sm" %>
+                <%= link_to "Supprimer", admin_camp_path(camp),
+                  data: { turbo_method: :delete, turbo_confirm: "Supprimer \"#{camp.title}\" ? Cette action est irréversible." },
+                  class: "ds-btn ds-btn--sm",
+                  style: "background:var(--error-50);color:var(--error-700);border:1px solid var(--error-200);" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        <% if @camps.empty? %>
+          <tr>
+            <td colspan="7" style="padding:var(--space-8); text-align:center; color:var(--neutral-400);">Aucun camp trouvé.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

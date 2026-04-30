@@ -1,0 +1,106 @@
+<%= form_with model: [:admin, camp], local: true, html: { enctype: "multipart/form-data" } do |f| %>
+  <% if camp.errors.any? %>
+    <div class="admin-flash admin-flash--alert mb-6">
+      <strong><%= camp.errors.count %> erreur(s) :</strong>
+      <ul style="margin: var(--space-2) 0 0 var(--space-4);">
+        <% camp.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%# Infos de base %>
+  <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+    <h3 class="mb-6">Informations générales</h3>
+    <%= render Ui::InputComponent.new(name: :title, label: "Titre du camp", form: f, required: true, placeholder: "Ex : Stage Beach Volley Côte d'Azur") %>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <%= f.text_area :description, class: "form-input", rows: 5, placeholder: "Décrivez le contenu du camp, les objectifs, le programme…" %>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :location, label: "Lieu", form: f, required: true, placeholder: "Ex : Nice") %>
+      <%= render Ui::InputComponent.new(name: :country, label: "Pays", form: f, required: true, placeholder: "Ex : France") %>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :start_date, label: "Date de début", type: "date", form: f, required: true) %>
+      <%= render Ui::InputComponent.new(name: :end_date, label: "Date de fin", type: "date", form: f, required: true) %>
+    </div>
+  <% end %>
+
+  <%# Organisateur & Coach %>
+  <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+    <h3 class="mb-6">Équipe</h3>
+    <div class="form-group">
+      <label class="form-label">Organisateur <span style="color:var(--error-600);">*</span></label>
+      <%= f.select :organizer_id,
+        User.organizers.order(:last_name).map { |u| [u.full_name, u.id] },
+        { include_blank: "— Choisir un organisateur —" },
+        class: "form-input",
+        required: true %>
+      <p class="form-helper">L'organisateur gère le camp depuis son espace organisateur.</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Coach assigné</label>
+      <%= f.select :coach_id,
+        User.coaches.order(:last_name).map { |u| [u.full_name, u.id] },
+        { include_blank: "— Aucun coach —" },
+        class: "form-input" %>
+      <p class="form-helper">Optionnel — apparaît sur la fiche publique du camp.</p>
+    </div>
+  <% end %>
+
+  <%# Niveau & Capacité %>
+  <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+    <h3 class="mb-6">Niveau & Capacité</h3>
+    <div class="form-group">
+      <label class="form-label">Niveau requis</label>
+      <%= f.select :level, Camp.levels.keys.map { |l| [l.humanize, l] }, {}, class: "form-input" %>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :min_participants, label: "Participants min.", type: "number", form: f, input_html: { min: 1 }) %>
+      <%= render Ui::InputComponent.new(name: :max_participants, label: "Participants max.", type: "number", form: f, input_html: { min: 1 }) %>
+    </div>
+  <% end %>
+
+  <%# Prix & Médias %>
+  <%= render Ui::CardComponent.new(padding: "p-8", extra_class: "mb-6") do %>
+    <h3 class="mb-6">Prix & Médias</h3>
+    <div class="grid grid-cols-2 gap-4">
+      <%= render Ui::InputComponent.new(name: :price_cents, label: "Prix (en centimes)", type: "number", form: f, helper: "Ex : 35000 pour 350€", input_html: { min: 0 }) %>
+      <div class="form-group">
+        <label class="form-label">Devise</label>
+        <%= f.select :currency, [["EUR (€)", "EUR"], ["USD ($)", "USD"], ["GBP (£)", "GBP"]], {}, class: "form-input" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Affiche / Photo</label>
+      <% if camp.poster.attached? %>
+        <div style="margin-bottom:var(--space-3);">
+          <%= image_tag camp.poster.variant(resize_to_fill: [300, 160]),
+            style: "border-radius:var(--radius-md); object-fit:cover; max-width:300px; height:160px; display:block;" %>
+          <p style="font-size:var(--fs-xs); color:var(--neutral-500); margin-top:4px;">Image actuelle</p>
+        </div>
+      <% end %>
+      <%= f.file_field :poster, class: "form-input", accept: "image/*" %>
+    </div>
+    <div class="form-group">
+      <label style="display:flex; align-items:center; gap:var(--space-3); cursor:pointer;">
+        <%= f.check_box :featured, style: "width:1rem;height:1rem;" %>
+        <div>
+          <div style="font-weight:var(--fw-semibold); font-size:var(--fs-sm);">⭐ Camp mis en avant</div>
+          <div style="font-size:var(--fs-xs); color:var(--neutral-500);">Apparaît en premier dans les résultats publics</div>
+        </div>
+      </label>
+    </div>
+  <% end %>
+
+  <div class="flex gap-3">
+    <%= f.submit camp.persisted? ? "Enregistrer les modifications" : "Créer le camp", class: "ds-btn ds-btn--primary ds-btn--lg" %>
+    <% if camp.persisted? %>
+      <%= link_to "Annuler", admin_camp_path(camp), class: "ds-btn ds-btn--outline ds-btn--md" %>
+    <% else %>
+      <%= link_to "Annuler", admin_camps_path, class: "ds-btn ds-btn--outline ds-btn--md" %>
+    <% end %>
+  </div>
+<% end %>

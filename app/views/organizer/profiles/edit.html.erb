@@ -1,0 +1,26 @@
+<% content_for(:title, t("organizer.profile.edit.title")) %>
+
+<div class="mb-8">
+  <h1><%= t("organizer.profile.edit.heading") %></h1>
+  <p class="text-muted"><%= t("organizer.profile.edit.subtitle") %></p>
+</div>
+
+<%= render Ui::CardComponent.new(padding: "p-6") do %>
+  <%= form_with model: current_user, url: organizer_profile_path, method: :patch, html: { multipart: true } do |f| %>
+    <%= render Ui::FormErrorsComponent.new(record: current_user) %>
+
+    <%= render Ui::InputComponent.new(name: :slug, label: t("organizer.profile.edit.field_slug"), form: f, placeholder: "maria-santos", helper: t("organizer.profile.edit.slug_hint")) %>
+    <%= render Ui::InputComponent.new(name: :coach_headline, label: t("organizer.profile.edit.field_headline"), form: f) %>
+    <%= render Ui::InputComponent.new(name: :coach_bio, label: t("organizer.profile.edit.field_bio"), type: "textarea", form: f, input_html: { rows: 6 }) %>
+    <%= render Ui::InputComponent.new(name: :coach_track_record, label: t("organizer.profile.edit.field_track_record"), type: "textarea", form: f, input_html: { rows: 6 }) %>
+    <%= render Ui::InputComponent.new(name: :avatar, label: t("organizer.profile.edit.field_avatar"), type: "file", form: f, input_html: { accept: "image/*" }) %>
+
+    <% if current_user.public_coach_profile? %>
+      <p class="mb-4" style="font-size:var(--fs-sm);">
+        <%= render Ui::ButtonComponent.new(href: trainer_path(current_user.slug), variant: "ghost", size: "sm") { t("organizer.profile.edit.view_public") } %>
+      </p>
+    <% end %>
+
+    <%= render Ui::ButtonComponent.new(tag: :button, type: "submit", size: "md") { t("shared.save") } %>
+  <% end %>
+<% end %>
